@@ -34,12 +34,14 @@ public class Vehicles {
     @Column (nullable = false)
     private String color;
 
+    @Enumerated(EnumType.STRING)
     @Column (nullable = false)
     private Seater seater;
 
     @Column
     private Integer child_seats_number;
 
+    @Enumerated(EnumType.STRING)
     @Column (nullable = false)
     private FuelTypeCar fuel_type_car;
 
