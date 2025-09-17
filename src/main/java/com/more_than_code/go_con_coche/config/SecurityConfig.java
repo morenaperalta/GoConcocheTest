@@ -1,0 +1,85 @@
+package com.more_than_code.go_con_coche.config;
+
+import com.more_than_code.go_con_coche.auth.JwtAuthenticationFilter;
+import com.more_than_code.go_con_coche.auth.services.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final CustomUserDetailsService userDetailsService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable).sessionManagement(
+                        session ->
+                                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth ->
+                        auth
+                                .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/refresh")
+                                .permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/health","/actuator/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/roles","/api/registered-users", "/api/renter-profiles", "/api/owner-profiles")
+                                .hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/roles")
+                                .hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/roles/**")
+                                .hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/roles/**")
+                                .hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/renter-profiles","/api/vehicle-reservations")
+                                .hasRole("RENTER")
+                                .requestMatchers(HttpMethod.PUT, "/api/renter-profiles/**","/api/vehicle-reservations/**")
+                                .hasRole("RENTER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/renter-profiles/**","/api/vehicle-reservations/**")
+                                .hasRole("RENTER")
+                                .requestMatchers(HttpMethod.POST, "/api/owner-profiles", "/api/vehicles", "/api/vehicle_rental_offers")
+                                .hasRole("OWNER")
+                                .requestMatchers(HttpMethod.PUT, "/api/owner-profiles/**",  "/api/vehicles/**", "/api/vehicle_rental_offers/**")
+                                .hasRole("OWNER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/owner-profiles/**",  "/api/vehicles/**", "/api/vehicle_rental_offers/**")
+                                .hasRole("OWNER")
+                                .anyRequest()
+                                .authenticated())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .authenticationProvider(authenticationProvider());
+        return http.build();
+    }
+}
