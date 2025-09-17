@@ -1,5 +1,6 @@
-package com.more_than_code.go_con_coche.auth;
+package com.more_than_code.go_con_coche.auth.services;
 
+import com.more_than_code.go_con_coche.auth.SecurityUser;
 import com.more_than_code.go_con_coche.registered_user.RegisteredUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

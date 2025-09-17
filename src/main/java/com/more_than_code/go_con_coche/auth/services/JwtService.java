@@ -1,4 +1,4 @@
-package com.more_than_code.go_con_coche.auth;
+package com.more_than_code.go_con_coche.auth.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
