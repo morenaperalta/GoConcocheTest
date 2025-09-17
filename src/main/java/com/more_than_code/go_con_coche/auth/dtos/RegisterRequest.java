@@ -1,8 +1,6 @@
 package com.more_than_code.go_con_coche.auth.dtos;
 
-import com.more_than_code.go_con_coche.Role.Role;
 import jakarta.validation.constraints.*;
-
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -13,7 +11,7 @@ public record RegisterRequest(@NotBlank
                               @NotBlank
                               @Size(min = 2, max = 50)
                               @Pattern(regexp = "^[A-Za-z'-]+$", message = "Second name must contain only Latin letters, hyphen or apostrophe")
-                              String secondName,
+                              String lastName,
                               @NotNull
                               @Past(message = "Date of birth must be in the past")
                               LocalDate dateOfBirth,
@@ -29,5 +27,5 @@ public record RegisterRequest(@NotBlank
                               @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z0-9]).{8,}$", message = "Password must be at least 8 characters and include uppercase, lowercase, number and special character")
                               String password,
                               @NotEmpty(message = "Roles cannot be empty")
-                              @NotNull Set<Role> roles) {
+                              Set<Long> roleIds){
 }
