@@ -9,6 +9,7 @@ import com.more_than_code.go_con_coche.auth.dtos.RegisterResponse;
 import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import com.more_than_code.go_con_coche.registered_user.RegisteredUserRepository;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import com.more_than_code.go_con_coche.auth.exceptions.RefreshTokenCookiesNotFoundException;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -68,6 +70,23 @@ public class AuthService {
         return new AuthResponse(user.getId(), user.getUsername(), jwtToken, user.getRoles());
     }
 
+    public String refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        validateCookies(request);
+        Cookie refreshTokenCookie = Arrays.stream(request.getCookies())
+                .filter(cookie -> "refresh_token".equals(cookie.getName()))
+                .findFirst()
+                .orElseThrow(RefreshTokenCookiesNotFoundException::new);
+        String currentRefreshToken = refreshTokenCookie.getValue();
+
+        String username = jwtService.extractSubject(currentRefreshToken);
+        String newJwtToken = jwtService.generateJwtToken(username);
+        String newRefreshToken = jwtService.generateRefreshToken(username);
+        Cookie newRefreshCookie = getRefreshTokenCookie(newRefreshToken);
+        response.addCookie(newRefreshCookie);
+
+        return newJwtToken;
+    }
+
     private Cookie getRefreshTokenCookie(String token) {
         long expirationMillis = jwtService.extractExpiration(token).getTime();
         long remainingSeconds = (expirationMillis - System.currentTimeMillis()) / 1000;
@@ -79,5 +98,11 @@ public class AuthService {
         refreshTokenCookie.setMaxAge(cookieMaxAge);
 
         return refreshTokenCookie;
+    }
+
+    private void validateCookies(HttpServletRequest request) {
+        if (request.getCookies() == null) {
+            throw new RuntimeException("No cookies present");
+        }
     }
 }

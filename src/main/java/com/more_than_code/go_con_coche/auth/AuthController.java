@@ -8,6 +8,7 @@ import com.more_than_code.go_con_coche.auth.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,5 +38,13 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + userResponse.token())
                 .body(userResponse);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<Void> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = authService.refreshToken(request, response);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + accessToken)
+                .build();
     }
 }
