@@ -1,14 +1,16 @@
-package com.more_than_code.go_con_coche.vehicles;
+package com.more_than_code.go_con_coche.vehicle.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
 
 @Entity
 @Table(name = "vehicles")
 @Data
 @AllArgsConstructor @NoArgsConstructor
 @Builder
-public class Vehicles {
+public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,10 +19,10 @@ public class Vehicles {
     private String vin;
 
     @Column(nullable = false, unique = true)
-    private String plate_number;
+    private String plateNumber;
 
     @Column (nullable = false, unique = true)
-    private String insurance_number;
+    private String insuranceNumber;
 
     @Column (nullable = false)
     private String model;
@@ -39,15 +41,15 @@ public class Vehicles {
     private Seater seater;
 
     @Column
-    private Integer child_seats_number;
+    private Integer childSeatsNumber;
 
     @Enumerated(EnumType.STRING)
     @Column (nullable = false)
-    private FuelTypeCar fuel_type_car;
+    private FuelTypeCar fuelTypeCar;
 
     @Column (nullable = false)
-    private String fuel_consumption;
+    private String fuelConsumption;
 
     @Column (nullable = false)
-    private String image_url;
+    private String imageUrl;
 }

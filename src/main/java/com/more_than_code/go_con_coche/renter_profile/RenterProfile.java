@@ -1,8 +1,6 @@
 package com.more_than_code.go_con_coche.renter_profile;
 
 import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
-import com.more_than_code.go_con_coche.role.Role;
-import com.more_than_code.go_con_coche.vehicles.Seater;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -14,7 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "renter_profile")
+@Table(name = "renter_profiles")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,10 +36,6 @@ public class RenterProfile {
     @CreationTimestamp
     @Column(name = "expired_date")
     public LocalDateTime expiredDate;
-
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private Role role;
 
     @NotBlank
     @Column(name = "image_url", nullable = false)
