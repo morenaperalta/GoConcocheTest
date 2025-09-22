@@ -1,6 +1,6 @@
 package com.more_than_code.go_con_coche.registered_user;
 
-import com.more_than_code.go_con_coche.Role.Role;
+import com.more_than_code.go_con_coche.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
