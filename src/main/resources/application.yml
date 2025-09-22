@@ -39,6 +39,7 @@ cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
+  default-image: ${CLOUDINARY_DEFAULT_IMAGE:/images/default-profile.jpg}
 
 jwt:
   rsa-public-key: ${RSA_PUBLIC_KEY}
