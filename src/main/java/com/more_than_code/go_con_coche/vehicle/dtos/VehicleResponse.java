@@ -8,16 +8,16 @@ import lombok.Builder;
 public record VehicleResponse (
         Long id,
         String vin,
-        String plate_number,
-        String insurance_number,
+        String plateNumber,
+        String insuranceNumber,
         String model,
         String brand,
         Integer year,
         String color,
         Seater seater,
-        Integer child_seats_number,
-        FuelTypeCar fuel_type_car,
-        String fuel_consumption,
-        String image_url
+        Integer childSeatsNumber,
+        FuelTypeCar fuelTypeCar,
+        String fuelConsumption,
+        String imageUrl
 ){
 }
