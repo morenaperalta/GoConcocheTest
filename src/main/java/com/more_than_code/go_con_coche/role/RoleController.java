@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,4 +25,11 @@ public class RoleController {
         List<RoleResponse> roles = roleService.getAllRoles();
         return ResponseEntity.ok(roles);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RoleResponse> getRoleById(@PathVariable Long id) {
+        RoleResponse role = roleService.getRoleById(id);
+        return ResponseEntity.ok(role);
+    }
+
 }

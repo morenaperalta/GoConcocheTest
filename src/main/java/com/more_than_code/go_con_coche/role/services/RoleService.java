@@ -9,4 +9,6 @@ public interface RoleService {
 
     List<RoleResponse> getAllRoles ();
 
+    public RoleResponse getRoleById(Long id);
+
 }
