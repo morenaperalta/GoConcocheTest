@@ -23,11 +23,11 @@ public class VehicleServiceImpl implements VehicleService{
         if (vehicleRepository.existsByVin(vehicleRequest.vin())) {
             throw new EntityAlreadyExistsException("Vehicle", "VIN", vehicleRequest.vin());
         }
-        if (vehicleRepository.existsByPlateNumber(vehicleRequest.plate_number())) {
-            throw new EntityAlreadyExistsException("Vehicle", "plate number", vehicleRequest.plate_number());
+        if (vehicleRepository.existsByPlateNumber(vehicleRequest.plateNumber())) {
+            throw new EntityAlreadyExistsException("Vehicle", "plate number", vehicleRequest.plateNumber());
         }
-        if (vehicleRepository.existsByInsuranceNumber(vehicleRequest.insurance_number())) {
-            throw new EntityAlreadyExistsException("Vehicle", "insurance number", vehicleRequest.insurance_number());
+        if (vehicleRepository.existsByInsuranceNumber(vehicleRequest.insuranceNumber())) {
+            throw new EntityAlreadyExistsException("Vehicle", "insurance number", vehicleRequest.insuranceNumber());
         }
 
         Vehicle vehicle = vehicleMapper.toEntity(vehicleRequest);

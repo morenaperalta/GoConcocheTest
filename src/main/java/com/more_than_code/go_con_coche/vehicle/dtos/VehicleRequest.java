@@ -11,9 +11,9 @@ public record VehicleRequest (
         @NotBlank
         String vin,
         @NotBlank
-        String plate_number,
+        String plateNumber,
         @NotBlank
-        String insurance_number,
+        String insuranceNumber,
         @NotBlank
         String model,
         @NotBlank
@@ -24,12 +24,12 @@ public record VehicleRequest (
         String color,
         @NotNull
         Seater seater,
-        Integer child_seats_number,
+        Integer childSeatsNumber,
         @NotNull
-        FuelTypeCar fuel_type_car,
+        FuelTypeCar fuelTypeCar,
         @NotBlank
-        String fuel_consumption,
+        String fuelConsumption,
         @NotBlank
-        String image_url
+        String imageUrl
 ) {
 }
