@@ -39,9 +39,9 @@ public class RenterProfile {
     @Column(name = "expired_date")
     public LocalDateTime expiredDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private Role role;
 
     @NotBlank
     @Column(name = "image_url", nullable = false)

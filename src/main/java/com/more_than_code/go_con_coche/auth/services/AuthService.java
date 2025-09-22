@@ -1,7 +1,7 @@
 package com.more_than_code.go_con_coche.auth.services;
 
-import com.more_than_code.go_con_coche.Role.Role;
-import com.more_than_code.go_con_coche.Role.RoleRepository;
+import com.more_than_code.go_con_coche.role.Role;
+import com.more_than_code.go_con_coche.role.RoleRepository;
 import com.more_than_code.go_con_coche.auth.dtos.AuthRequest;
 import com.more_than_code.go_con_coche.auth.dtos.AuthResponse;
 import com.more_than_code.go_con_coche.auth.dtos.RegisterRequest;
