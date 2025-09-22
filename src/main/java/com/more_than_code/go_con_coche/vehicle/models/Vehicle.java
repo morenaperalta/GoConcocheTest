@@ -1,14 +1,16 @@
-package com.more_than_code.go_con_coche.vehicles;
+package com.more_than_code.go_con_coche.vehicle.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
 
 @Entity
 @Table(name = "vehicles")
 @Data
 @AllArgsConstructor @NoArgsConstructor
 @Builder
-public class Vehicles {
+public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
