@@ -52,9 +52,9 @@ public class AuthService {
                 .roles(roles)
                 .build();
 
-        userRepository.save(user);
+        RegisteredUser savedUser = userRepository.save(user);
 
-        return new RegisterResponse(user.getId(), user.getUsername(), user.getRoles());
+        return new RegisterResponse(savedUser.getId(), savedUser.getUsername(), savedUser.getRoles());
     }
 
     public AuthResponse authenticate(AuthRequest loginDto, HttpServletResponse response) {
