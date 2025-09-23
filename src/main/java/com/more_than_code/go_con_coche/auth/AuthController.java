@@ -5,8 +5,6 @@ import com.more_than_code.go_con_coche.auth.dtos.AuthResponse;
 import com.more_than_code.go_con_coche.auth.dtos.RegisterRequest;
 import com.more_than_code.go_con_coche.auth.dtos.RegisterResponse;
 import com.more_than_code.go_con_coche.auth.services.AuthService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
