@@ -1,4 +1,4 @@
-package com.more_than_code.go_con_coche.renter_profile;
+package com.more_than_code.go_con_coche.owner_profile;
 
 import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import jakarta.persistence.*;
@@ -7,17 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "renter_profiles")
+@Table (name="owner")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 @Builder
-public class RenterProfile {
+public class OwnerProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,17 +21,6 @@ public class RenterProfile {
     @OneToOne
     @JoinColumn(name = "registered_user_id", referencedColumnName = "id")
     private RegisteredUser registeredUserId;
-
-    @Enumerated(EnumType.STRING)
-    @Column (nullable = false)
-    private TypeLicense typeLicense;
-
-    @Column(name = "licence_number", nullable = false)
-    private String licenceNumber;
-
-    @CreationTimestamp
-    @Column(name = "expired_date")
-    public LocalDateTime expiredDate;
 
     @NotBlank
     @Column(name = "image_url", nullable = false)
