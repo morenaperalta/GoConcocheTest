@@ -18,6 +18,7 @@ public record VehicleResponse (
         Integer childSeatsNumber,
         FuelTypeCar fuelTypeCar,
         String fuelConsumption,
-        String imageUrl
+        String imageUrl,
+        OwnerProfileResponse owner
 ){
 }

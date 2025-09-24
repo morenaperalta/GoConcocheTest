@@ -8,6 +8,8 @@ import lombok.Builder;
 
 @Builder
 public record VehicleRequest (
+        @NotNull
+        Long ownerId,
         @NotBlank
         String vin,
         @NotBlank

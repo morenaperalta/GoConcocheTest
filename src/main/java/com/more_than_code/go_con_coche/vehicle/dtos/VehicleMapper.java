@@ -38,6 +38,9 @@ public class VehicleMapper {
                 .fuelTypeCar(vehicle.getFuelTypeCar())
                 .fuelConsumption(vehicle.getFuelConsumption())
                 .imageUrl(vehicle.getImageUrl())
+                .owner(VehicleResponse.OwnerProfileResponse.builder()
+                        .id(vehicle.getOwner().getId())
+                        .build())
                 .build();
     }
 }

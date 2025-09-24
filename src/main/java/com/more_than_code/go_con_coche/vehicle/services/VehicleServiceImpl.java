@@ -1,6 +1,9 @@
 package com.more_than_code.go_con_coche.vehicle.services;
 
 import com.more_than_code.go_con_coche.global.EntityAlreadyExistsException;
+import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
+import com.more_than_code.go_con_coche.owner_profile.OwnerProfileRepository;
+import com.more_than_code.go_con_coche.registered_user.services.UserAuthService;
 import com.more_than_code.go_con_coche.vehicle.VehicleRepository;
 import com.more_than_code.go_con_coche.vehicle.dtos.VehicleMapper;
 import com.more_than_code.go_con_coche.vehicle.dtos.VehicleRequest;
@@ -16,6 +19,8 @@ public class VehicleServiceImpl implements VehicleService{
 
     private final VehicleRepository vehicleRepository;
     private final VehicleMapper vehicleMapper;
+    private final OwnerProfileRepository ownerProfileRepository;
+    private final UserAuthService userAuthService;
 
     @Override
     @Transactional
@@ -29,6 +34,8 @@ public class VehicleServiceImpl implements VehicleService{
         if (vehicleRepository.existsByInsuranceNumber(vehicleRequest.insuranceNumber())) {
             throw new EntityAlreadyExistsException("Vehicle", "insurance number", vehicleRequest.insuranceNumber());
         }
+
+        OwnerProfile owner = ownerProfileRepository.f
 
         Vehicle vehicle = vehicleMapper.toEntity(vehicleRequest);
 
