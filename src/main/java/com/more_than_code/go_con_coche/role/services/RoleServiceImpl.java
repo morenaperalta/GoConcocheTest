@@ -28,7 +28,7 @@ public class RoleServiceImpl implements RoleService {
 
     public RoleResponse getRoleById(Long id) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Role", "role name", String.valueOf(id)));
+                .orElseThrow(() -> new EntityNotFoundException("Role", "id", String.valueOf(id)));
         return roleMapperImpl.entityToDto(role);
     }
 

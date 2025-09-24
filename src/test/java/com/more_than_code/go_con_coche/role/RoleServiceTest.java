@@ -1,5 +1,6 @@
 package com.more_than_code.go_con_coche.role;
 
+import com.more_than_code.go_con_coche.global.EntityNotFoundException;
 import com.more_than_code.go_con_coche.role.dtos.RoleMapperImpl;
 import com.more_than_code.go_con_coche.role.dtos.RoleResponse;
 import com.more_than_code.go_con_coche.role.services.RoleService;
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -57,8 +59,34 @@ public class RoleServiceTest {
             assertThat(result).hasSize(1);
             assertThat(result.get(0).roleName()).isEqualTo("ROLE_ADMIN");
         }
-
     }
 
+    @Nested
+    @DisplayName("getRoleById")
+    class GetRoleById {
 
+        @Test
+        @DisplayName("should return RoleResponse for valid id")
+        void shouldReturnRoleResponse() {
+            given(roleRepository.findById(1L)).willReturn(Optional.of(role));
+            given(roleMapperImpl.entityToDto(role)).willReturn(roleResponse);
+
+            RoleResponse result = roleServiceImpl.getRoleById(1L);
+
+            assertThat(result).isNotNull();
+            assertThat(result.roleName()).isEqualTo("ROLE_ADMIN");
+        }
+
+        @Test
+        @DisplayName("should throw EntityNotFoundException for invalid id")
+        void shouldThrowWhenIdNotFound() {
+            given(roleRepository.findById(99L)).willReturn(Optional.empty());
+
+            Exception exception = assertThrows(EntityNotFoundException.class, () -> roleServiceImpl.getRoleById(99L));
+
+            assertThat(exception.getMessage()).contains("Role with id 99 was not found");
+        }
+
+
+    }
 }
