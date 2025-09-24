@@ -1,4 +1,4 @@
-package com.more_than_code.go_con_coche.renter_profile;
+package com.more_than_code.go_con_coche.renter_profile.models;
 
 public enum TypeLicense {
     B,
