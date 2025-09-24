@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table (name="owner")
+@Table (name="owner_profiles")
 @Data
 @NoArgsConstructor @AllArgsConstructor
 @Builder
@@ -20,7 +20,7 @@ public class OwnerProfile {
 
     @OneToOne
     @JoinColumn(name = "registered_user_id", referencedColumnName = "id")
-    private RegisteredUser registeredUserId;
+    private RegisteredUser registeredUser;
 
     @NotBlank
     @Column(name = "image_url", nullable = false)
