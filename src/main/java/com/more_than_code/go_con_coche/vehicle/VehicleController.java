@@ -19,7 +19,7 @@ public class VehicleController {
     private final VehicleService vehicleService;
 
     @PostMapping
-    public ResponseEntity<VehicleResponse> createVehicle(@Valid @RequestBody VehicleRequest vehicleRequest) {
+    public ResponseEntity<VehicleResponse> createVehicle(@Valid @ModelAttribute VehicleRequest vehicleRequest) {
         VehicleResponse createdVehicle = vehicleService.createVehicle(vehicleRequest);
         return new ResponseEntity<>(createdVehicle, HttpStatus.CREATED);
     }

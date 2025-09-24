@@ -20,7 +20,6 @@ public class VehicleMapper {
                 .childSeatsNumber(vehicleRequest.childSeatsNumber())
                 .fuelTypeCar(vehicleRequest.fuelTypeCar())
                 .fuelConsumption(vehicleRequest.fuelConsumption())
-                .imageUrl(vehicleRequest.imageUrl())
                 .build();
     }
 

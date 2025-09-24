@@ -54,6 +54,8 @@ public class Vehicle {
     @Column (nullable = false)
     private String imageUrl;
 
+    private String publicImageId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private OwnerProfile owner;
