@@ -1,0 +1,44 @@
+services:
+  go-con-coche-db:
+    image: mysql:8.0
+    container_name: go-con-coche-db
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER_DOCKER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD_DOCKER}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - go-con-coche-network
+
+  go-con-coche-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go-con-coche-app
+    env_file:
+      - .env
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - go-con-coche-db
+    networks:
+      - go-con-coche-network
+
+networks:
+  go-con-coche-network:
+    driver: bridge
+    name: go-con-coche-network
+
+volumes:
+  mysql_data:
+    name: go-con-coche_mysql_data
+  app_logs:
+    name: go-con-coche_app_logs
