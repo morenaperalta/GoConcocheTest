@@ -1,5 +1,6 @@
 package com.more_than_code.go_con_coche.vehicle.models;
 
+import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -52,4 +53,10 @@ public class Vehicle {
 
     @Column (nullable = false)
     private String imageUrl;
+
+    private String publicImageId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private OwnerProfile owner;
 }
