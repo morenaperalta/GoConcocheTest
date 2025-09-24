@@ -1,6 +1,7 @@
 package com.more_than_code.go_con_coche.vehicle.services;
 
 import com.more_than_code.go_con_coche.global.EntityAlreadyExistsException;
+import com.more_than_code.go_con_coche.global.EntityNotFoundException;
 import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
 import com.more_than_code.go_con_coche.owner_profile.OwnerProfileRepository;
 import com.more_than_code.go_con_coche.registered_user.services.UserAuthService;
@@ -9,9 +10,12 @@ import com.more_than_code.go_con_coche.vehicle.dtos.VehicleMapper;
 import com.more_than_code.go_con_coche.vehicle.dtos.VehicleRequest;
 import com.more_than_code.go_con_coche.vehicle.dtos.VehicleResponse;
 import com.more_than_code.go_con_coche.vehicle.models.Vehicle;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +39,34 @@ public class VehicleServiceImpl implements VehicleService{
             throw new EntityAlreadyExistsException("Vehicle", "insurance number", vehicleRequest.insuranceNumber());
         }
 
-        OwnerProfile owner = ownerProfileRepository.f
+        OwnerProfile owner = ownerProfileRepository.findById(vehicleRequest.ownerId())
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "id", vehicleRequest.ownerId().toString()));
 
         Vehicle vehicle = vehicleMapper.toEntity(vehicleRequest);
+        vehicle.setOwner(owner);
 
         Vehicle savedVehicle = vehicleRepository.save(vehicle);
-
         return vehicleMapper.toResponse(savedVehicle);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<VehicleResponse> getAllVehicles() {
+        List<Vehicle> vehicles = vehicleRepository.findAll();
+        return vehicles.stream()
+                .map(vehicleMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<VehicleResponse> getVehicleByOwner(Long ownerId) {
+        OwnerProfile owner = ownerProfileRepository.findById(ownerId)
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "id", ownerId.toString()));
+
+        List<Vehicle> vehicles = vehicleRepository.findByOwner(owner);
+        return vehicles.stream()
+                .map(vehicleMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

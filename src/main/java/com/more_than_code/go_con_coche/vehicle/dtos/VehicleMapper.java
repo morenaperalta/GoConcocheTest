@@ -1,5 +1,6 @@
 package com.more_than_code.go_con_coche.vehicle.dtos;
 
+import com.more_than_code.go_con_coche.owner_profile.dtos.OwnerProfileResponse;
 import com.more_than_code.go_con_coche.vehicle.models.Vehicle;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +39,7 @@ public class VehicleMapper {
                 .fuelTypeCar(vehicle.getFuelTypeCar())
                 .fuelConsumption(vehicle.getFuelConsumption())
                 .imageUrl(vehicle.getImageUrl())
-                .owner(VehicleResponse.OwnerProfileResponse.builder()
+                .owner(OwnerProfileResponse.builder()
                         .id(vehicle.getOwner().getId())
                         .build())
                 .build();
