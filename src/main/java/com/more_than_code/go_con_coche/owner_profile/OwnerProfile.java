@@ -20,7 +20,7 @@ public class OwnerProfile {
 
     @OneToOne
     @JoinColumn(name = "registered_user_id", referencedColumnName = "id")
-    private RegisteredUser registeredUserId;
+    private RegisteredUser registeredUser;
 
     @NotBlank
     @Column(name = "image_url", nullable = false)
