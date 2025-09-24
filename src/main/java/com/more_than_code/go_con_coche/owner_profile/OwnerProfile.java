@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table (name="owner")
+@Table (name="owner_profiles")
 @Data
 @NoArgsConstructor @AllArgsConstructor
 @Builder
