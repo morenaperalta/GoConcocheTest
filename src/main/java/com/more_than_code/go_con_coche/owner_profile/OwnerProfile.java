@@ -30,4 +30,3 @@ public class OwnerProfile {
     @Column(name = "image_url", nullable = false)
     private String imageURL;
 }
-}
