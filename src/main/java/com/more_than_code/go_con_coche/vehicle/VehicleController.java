@@ -7,10 +7,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/vehicles")
@@ -20,8 +19,20 @@ public class VehicleController {
     private final VehicleService vehicleService;
 
     @PostMapping
-    public ResponseEntity<VehicleResponse> createVehicle(@Valid @RequestBody VehicleRequest vehicleRequest) {
+    public ResponseEntity<VehicleResponse> createVehicle(@Valid @ModelAttribute VehicleRequest vehicleRequest) {
         VehicleResponse createdVehicle = vehicleService.createVehicle(vehicleRequest);
         return new ResponseEntity<>(createdVehicle, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<VehicleResponse>> getAllVehicles() {
+        List<VehicleResponse> vehicles = vehicleService.getAllVehicles();
+        return new ResponseEntity<>(vehicles, HttpStatus.OK);
+    }
+
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<VehicleResponse>> getVehiclesByOwner(@PathVariable Long ownerId) {
+        List<VehicleResponse> vehicles = vehicleService.getVehicleByOwner(ownerId);
+        return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 }
