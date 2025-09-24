@@ -1,14 +1,19 @@
 package com.more_than_code.go_con_coche.config;
 
 import com.cloudinary.Cloudinary;
+import com.more_than_code.go_con_coche.cloudinary.DefaultImageType;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class CloudinaryConfig {
+@ConfigurationProperties(prefix = "cloudinary")
+@Data
+public class CloudinaryProperties {
     @Value("${cloudinary.cloud-name}")
     private String cloudName;
 
@@ -17,6 +22,8 @@ public class CloudinaryConfig {
 
     @Value("${cloudinary.api-secret}")
     private String apiSecret;
+
+    private Map<DefaultImageType, String> defaultImages = new HashMap<>();
 
     @Bean
     public Cloudinary cloudinary() {

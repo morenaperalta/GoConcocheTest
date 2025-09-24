@@ -1,6 +1,7 @@
 package com.more_than_code.go_con_coche.cloudinary;
 
 import com.cloudinary.Cloudinary;
+import com.more_than_code.go_con_coche.config.CloudinaryProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,8 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class CloudinaryService {
-    @Value("${cloudinary.default-image}")
-    private String defaultProfileImageUrl;
     private final Cloudinary cloudinary;
+    private final CloudinaryProperties properties;
 
     public UploadResult upload(MultipartFile file, String folder) {
         try {
@@ -41,7 +41,11 @@ public class CloudinaryService {
         }
     }
 
-    public UploadResult uploadDefault(String folder) {
-        return new UploadResult(defaultProfileImageUrl, null);
+    public UploadResult uploadDefault(DefaultImageType type) {
+        String url = properties.getDefaultImages().get(type);
+        if (url == null) {
+            throw new IllegalArgumentException("No default image configured for type: " + type);
+        }
+        return new UploadResult(url, null);
     }
 }
