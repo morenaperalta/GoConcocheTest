@@ -71,6 +71,48 @@ with a strong focus on modularity, security, and eﬃciency.
 
 [![temp-Imagemxv-S8-B.avif](https://i.postimg.cc/JhvdWdQt/temp-Imagemxv-S8-B.avif)](https://postimg.cc/CZC4G7XV)
 
+## 🔄 Workflow - Pipelines
+
+The project uses **GitHub Actions** for continuous integration.
+
+This project implements a robust CI/CD pipeline using GitHub Actions to automate testing, Docker image building, and release management.
+
+### 🔧 Build Pipeline (build.yml)
+[![Build Pipeline](https://github.com/More-ThanCode/GoConcoche/actions/workflows/build.yml/badge.svg)](https://github.com/More-ThanCode/GoConcoche/actions/workflows/build.yml)
+
+**Trigger:** Automatically executes on every push to main branch
+
+**Purpose:** Build and publish development images
+
+**Activities:**
+
+- Docker image building and optimization
+- Pushing images to Docker Hub registry
+- Tagging images with commit SHAs
+- Generating build artifacts and reports
+
+### 🎯 Release Pipeline (release.yml)
+[![Release Pipeline](https://github.com/More-ThanCode/GoConcoche/actions/workflows/release.yml/badge.svg)](https://github.com/More-ThanCode/GoConcoche/actions/workflows/release.yml)
+
+**Trigger:** Automatically activates when version tags are pushed (format: v*, e.g., v1.0.0)
+
+**Purpose:** Production-ready deployments
+
+### 🔍 Test Pipeline (test.yml)
+[![Test Pipeline](https://github.com/More-ThanCode/GoConcoche/actions/workflows/test.yml/badge.svg)](https://github.com/More-ThanCode/GoConcoche/actions/workflows/test.yml)
+
+**Trigger:** Automatically runs on every Pull Request targeting main
+
+**Purpose:** Quality assurance before code merging
+
+**Activities:**
+
+- Runs comprehensive test suite in Docker containers
+- Executes security scans and code analysis
+- Generates test coverage reports
+- Uses docker-compose-test.yml for test environment
+- Automatic cleanup after execution
+
 ## Contributors
 
 Morena Peralta Almada
