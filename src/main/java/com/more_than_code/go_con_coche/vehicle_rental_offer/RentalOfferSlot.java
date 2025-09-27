@@ -1,0 +1,34 @@
+package com.more_than_code.go_con_coche.vehicle_rental_offer;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "rental_offer_slots")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class RentalOfferSlot {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "offer_id", nullable = false)
+    private VehicleRentalOffer offer;
+
+    @Column(name = "slot_start",nullable = false)
+    private LocalDateTime slotStart;
+
+    @Column(name = "slot_end",nullable = false)
+    private LocalDateTime slotEnd;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "available",nullable = false)
+    private boolean isAvailable;
+}
