@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "vehicle_rental_offers")
@@ -40,4 +42,6 @@ public class VehicleRentalOffer {
     @Column(name = "price_hour", nullable = false)
     private double priceHour;
 
+    @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RentalOfferSlot> slots = new ArrayList<>();
 }
