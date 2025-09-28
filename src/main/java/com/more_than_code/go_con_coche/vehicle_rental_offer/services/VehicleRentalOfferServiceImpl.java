@@ -1,4 +1,4 @@
-package com.more_than_code.go_con_coche.vehicle_rental_offer;
+package com.more_than_code.go_con_coche.vehicle_rental_offer.services;
 
 import com.more_than_code.go_con_coche.global.EntityNotFoundException;
 import com.more_than_code.go_con_coche.location.Location;
@@ -14,7 +14,6 @@ import com.more_than_code.go_con_coche.vehicle_rental_offer.dtos.RentalOfferRequ
 import com.more_than_code.go_con_coche.vehicle_rental_offer.dtos.RentalOfferResponse;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.models.RentalOfferSlot;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.models.VehicleRentalOffer;
-import com.more_than_code.go_con_coche.vehicle_rental_offer.repositories.RentalOfferSlotRepository;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.repositories.VehicleRentalOfferRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
