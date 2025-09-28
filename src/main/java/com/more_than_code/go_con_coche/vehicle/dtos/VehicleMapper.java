@@ -77,4 +77,17 @@ public class VehicleMapper {
             vehicle.setFuelConsumption(request.fuelConsumption());
         }
     }
+
+    public VehicleOfferResponse toVehicleOfferResponse(Vehicle vehicle) {
+        return VehicleOfferResponse.builder()
+                .id(vehicle.getId())
+                .model(vehicle.getModel())
+                .year(vehicle.getYear())
+                .color(vehicle.getColor())
+                .seats(vehicle.getSeater())
+                .fuelTypeCar(vehicle.getFuelTypeCar())
+                .fuelConsumption(vehicle.getFuelConsumption())
+                .imageUrl(vehicle.getImageUrl())
+                .build();
+    }
 }
