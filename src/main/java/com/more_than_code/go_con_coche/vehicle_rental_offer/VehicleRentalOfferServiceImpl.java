@@ -38,12 +38,15 @@ public class VehicleRentalOfferServiceImpl implements VehicleRentalOfferService 
         if (!rentalOfferRequest.endDateTime().isAfter(rentalOfferRequest.startDateTime())) {
             throw new IllegalArgumentException("End date-time must be after start date-time");
         }
-
         RegisteredUser owner = userService.getAuthenticatedUser();
         OwnerProfile ownerProfile = ownerProfileRepository.findByRegisteredUserId(owner.getId())
                 .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "user", owner.getUsername()));
         Vehicle vehicle = vehicleService.getVehicleByIdObj(rentalOfferRequest.vehicleId());
         Location location = locationService.getLocationByIdObj(rentalOfferRequest.locationId());
+
+        if (offerRepository.existsOverlappingOffer(vehicle.getId(), rentalOfferRequest.startDateTime(), rentalOfferRequest.endDateTime())) {
+            throw new IllegalArgumentException("Vehicle already has an overlapping offer for the selected dates");
+        }
 
         VehicleRentalOffer rentalOffer = rentalOfferMapper.toEntity(rentalOfferRequest);
         rentalOffer.setVehicle(vehicle);
@@ -64,14 +67,12 @@ public class VehicleRentalOfferServiceImpl implements VehicleRentalOfferService 
             if (slotEnd.isAfter(offer.getEndDateTime())) {
                 slotEnd = offer.getEndDateTime();
             }
-
             RentalOfferSlot slot = RentalOfferSlot.builder()
                     .offer(offer)
                     .slotStart(current)
                     .slotEnd(slotEnd)
                     .isAvailable(true)
                     .build();
-
             slots.add(slot);
             current = slotEnd;
         }

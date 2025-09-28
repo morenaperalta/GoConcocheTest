@@ -17,8 +17,6 @@ public record RentalOfferRequest(@NotNull(message = "Vehicle ID is required")
                                  @NotNull(message = "End date-time cannot be null")
                                  @Future(message = "End date-time must be in the future")
                                  LocalDateTime endDateTime,
-                                 @Min(value = 1, message = "Travellers number should be more then 0")
-                                 int travellersNumber,
                                  @DecimalMin(value = "0.01", inclusive = true, message = "Price per hour should be more then 0")
                                  double priceHour) {
 }
