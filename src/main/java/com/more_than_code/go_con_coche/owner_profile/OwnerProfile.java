@@ -31,4 +31,7 @@ public class OwnerProfile {
     private String imageURL;
 
     private String publicImageId;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VehicleRentalOffer> offers = new ArrayList<>();
 }
