@@ -28,7 +28,6 @@ public class RentalOfferSlot {
     @Column(name = "slot_end",nullable = false)
     private LocalDateTime slotEnd;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "available",nullable = false)
     private boolean isAvailable;
 }

@@ -155,4 +155,9 @@ public class VehicleServiceImpl implements VehicleService{
 
         vehicleRepository.delete(vehicleToDelete);
     }
+
+    public Vehicle getVehicleByIdObj(Long id) {
+        return vehicleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle", "id", id.toString()));
+    }
 }
