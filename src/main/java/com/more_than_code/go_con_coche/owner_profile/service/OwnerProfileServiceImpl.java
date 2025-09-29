@@ -4,6 +4,7 @@ import com.more_than_code.go_con_coche.cloudinary.CloudinaryService;
 import com.more_than_code.go_con_coche.cloudinary.DefaultImageType;
 import com.more_than_code.go_con_coche.cloudinary.UploadResult;
 import com.more_than_code.go_con_coche.global.EntityAlreadyExistsException;
+import com.more_than_code.go_con_coche.global.EntityNotFoundException;
 import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
 import com.more_than_code.go_con_coche.owner_profile.OwnerProfileRepository;
 import com.more_than_code.go_con_coche.owner_profile.dtos.OwnerProfileMapper;
@@ -42,4 +43,28 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
         OwnerProfile savedOwnerProfile = ownerProfileRepository.save(ownerProfile);
         return ownerProfileMapper.toResponse(savedOwnerProfile);
     }
+
+    @Override
+    public OwnerProfileResponse getOwnerProfile() {
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        OwnerProfile ownerProfile = ownerProfileRepository
+                .findByRegisteredUserId(authenticatedUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "registeredUserId", String.valueOf(authenticatedUser.getId())));
+
+        return ownerProfileMapper.toResponse(ownerProfile);
+    }
+
+
+    public OwnerProfile getOwnerProfileObj(Long id) {
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        return ownerProfileRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "OwnerProfile",
+                        "registeredUserId",
+                        String.valueOf(authenticatedUser.getId())
+                ));
+    }
+
 }
