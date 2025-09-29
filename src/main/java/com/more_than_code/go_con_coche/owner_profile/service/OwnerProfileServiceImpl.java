@@ -55,11 +55,11 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
         return ownerProfileMapper.toResponse(ownerProfile);
     }
 
-    public OwnerProfile getOwnerProfileEntity() {
+
+    public OwnerProfile getOwnerProfileObj(Long id) {
         RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
 
-        return ownerProfileRepository
-                .findByRegisteredUserId(authenticatedUser.getId())
+        return ownerProfileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "OwnerProfile",
                         "registeredUserId",
