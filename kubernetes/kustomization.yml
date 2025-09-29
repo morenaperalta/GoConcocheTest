@@ -8,6 +8,7 @@ resources:
   - deployment.yml
   - service.yml
   - configmap.yml
+  - mailhog.yml
 
 images:
   - name: fyrfigrabbaf6kyhpi/go-con-coche
