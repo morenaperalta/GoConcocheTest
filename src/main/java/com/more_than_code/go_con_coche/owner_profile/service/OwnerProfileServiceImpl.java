@@ -26,8 +26,9 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
         RegisteredUser user = userAuthService.getAuthenticatedUser();
         ownerProfile.setRegisteredUser(user);
 
-        if(ownerProfileRepository.findByRegisteredUserId(user)){
-            throw  new EntityAlreadyExistsException(OwnerProfile.class.getSimpleName(), "user", user.getUsername());
+        if (ownerProfileRepository.findByRegisteredUserId(user.getId()).isPresent()) {
+            throw new EntityAlreadyExistsException(
+                    OwnerProfile.class.getSimpleName(), "user", user.getUsername());
         }
 
         OwnerProfile savedOwnerProfile = ownerProfileRepository.save(ownerProfile);
