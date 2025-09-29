@@ -1,10 +1,9 @@
 package com.more_than_code.go_con_coche.vehicle_rental_offer.services;
 
-import com.more_than_code.go_con_coche.global.EntityNotFoundException;
 import com.more_than_code.go_con_coche.location.Location;
 import com.more_than_code.go_con_coche.location.services.LocationServiceImpl;
 import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
-import com.more_than_code.go_con_coche.owner_profile.OwnerProfileRepository;
+import com.more_than_code.go_con_coche.owner_profile.service.OwnerProfileService;
 import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import com.more_than_code.go_con_coche.registered_user.services.UserAuthService;
 import com.more_than_code.go_con_coche.vehicle.models.Vehicle;
@@ -29,7 +28,7 @@ public class VehicleRentalOfferServiceImpl implements VehicleRentalOfferService 
     private final RentalOfferMapper rentalOfferMapper;
     private final VehicleServiceImpl vehicleService;
     private final LocationServiceImpl locationService;
-    private final OwnerProfileRepository ownerProfileRepository;
+    private final OwnerProfileService ownerProfileService;
     private final UserAuthService userService;
 
     @Override
@@ -38,8 +37,7 @@ public class VehicleRentalOfferServiceImpl implements VehicleRentalOfferService 
             throw new IllegalArgumentException("End date-time must be after start date-time");
         }
         RegisteredUser owner = userService.getAuthenticatedUser();
-        OwnerProfile ownerProfile = ownerProfileRepository.findByRegisteredUserId(owner.getId())
-                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "user", owner.getUsername()));
+        OwnerProfile ownerProfile = ownerProfileService.getOwnerProfileObj(owner.getId());
         Vehicle vehicle = vehicleService.getVehicleByIdObj(rentalOfferRequest.vehicleId());
         Location location = locationService.getLocationByIdObj(rentalOfferRequest.locationId());
 
