@@ -1,5 +1,8 @@
 package com.more_than_code.go_con_coche.owner_profile.service;
 
+import com.more_than_code.go_con_coche.cloudinary.CloudinaryService;
+import com.more_than_code.go_con_coche.cloudinary.DefaultImageType;
+import com.more_than_code.go_con_coche.cloudinary.UploadResult;
 import com.more_than_code.go_con_coche.global.EntityAlreadyExistsException;
 import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
 import com.more_than_code.go_con_coche.owner_profile.OwnerProfileRepository;
@@ -18,18 +21,23 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
     private final OwnerProfileRepository ownerProfileRepository;
     private final UserAuthService userAuthService;
     private final OwnerProfileMapper ownerProfileMapper;
+    private final CloudinaryService cloudinaryService;
 
     @Override
-    @Transactional
     public OwnerProfileResponse createOwnerProfile (OwnerProfileRequest ownerProfileRequest){
-        OwnerProfile ownerProfile = ownerProfileMapper.toEntity(ownerProfileRequest);
-        RegisteredUser user = userAuthService.getAuthenticatedUser();
-        ownerProfile.setRegisteredUser(user);
 
-        if (ownerProfileRepository.findByRegisteredUserId(user.getId()).isPresent()) {
-            throw new EntityAlreadyExistsException(
-                    OwnerProfile.class.getSimpleName(), "user", user.getUsername());
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        if (ownerProfileRepository.findByRegisteredUserId(authenticatedUser.getId()).isPresent()) {
+            throw new EntityAlreadyExistsException("Owner profile", "registeredUserId", authenticatedUser.getId().toString());
         }
+        UploadResult uploadResult = cloudinaryService.resolveImage(ownerProfileRequest.image(), DefaultImageType.PROFILE);
+
+        OwnerProfile ownerProfile = OwnerProfile.builder()
+                .registeredUser(authenticatedUser)
+                .imageURL(uploadResult.url())
+                .publicImageId(uploadResult.publicId())
+                .build();
 
         OwnerProfile savedOwnerProfile = ownerProfileRepository.save(ownerProfile);
         return ownerProfileMapper.toResponse(savedOwnerProfile);
