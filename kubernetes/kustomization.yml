@@ -8,6 +8,7 @@ resources:
   - deployment.yml
   - service.yml
   - configmap.yml
+  - mailhog.yml
 
 images:
   - name: fyrfigrabbaf6kyhpi/go-con-coche
@@ -18,7 +19,7 @@ namePrefix: go-con-coche-
 labels:
   - pairs:
       app: go-con-coche
-      version: v1
+      version: v1.1.1
 
 
 replicas:
