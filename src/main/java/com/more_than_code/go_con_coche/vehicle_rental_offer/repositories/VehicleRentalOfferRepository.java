@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface VehicleRentalOfferRepository extends JpaRepository<VehicleRentalOffer, Long> {
     @Query("SELECT CASE WHEN COUNT(o) > 0 THEN true ELSE false END " +
@@ -15,4 +16,7 @@ public interface VehicleRentalOfferRepository extends JpaRepository<VehicleRenta
     boolean existsOverlappingOffer(@Param("vehicleId") Long vehicleId,
                                    @Param("startDateTime") LocalDateTime startDateTime,
                                    @Param("endDateTime") LocalDateTime endDateTime);
+
+    List<VehicleRentalOffer> findByLocationIdAndIsAvailableTrue(Long locationId);
 }
+
