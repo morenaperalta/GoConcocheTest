@@ -1,33 +1,16 @@
-# Kustomization configuration for go-con-coche application
-# This file defines how to customize and deploy the go-con-coche Kubernetes resources
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
 
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: go-con-coche
+  name: config
+  labels:
+    app: go-con-coche
+data:
+  db-url: "jdbc:mysql://mysql:3306/goconcoche"
 
-# List of Kubernetes resource files to include in this deployment
-resources:
-  - deployment.yml
-  - service.yml
-  - configmap.yml
+  show-sql: "false"
 
-# Image customization - override image tags
-images:
-  - name: fyrfigrabbaf6kyhpi/go-con-coche
-    newTag: latest
+  spring-profiles-active: "kubernetes"
 
-# Add prefix to all resource names to avoid conflicts
-namePrefix: go-con-coche-
-
-# Add common labels to all resources
-labels:
-  - pairs:
-      app: go-con-coche
-      version: v1
-
-
-# Override replica count for specific deployments
-replicas:
-  - name: app
-    count: 1
+  hibernate-ddl-auto: "validate"
+  hibernate-dialect: "org.hibernate.dialect.MySQL8Dialect"
