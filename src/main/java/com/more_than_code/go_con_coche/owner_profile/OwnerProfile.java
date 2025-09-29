@@ -25,4 +25,6 @@ public class OwnerProfile {
     @NotBlank
     @Column(name = "image_url", nullable = false)
     private String imageURL;
+
+    private String publicImageId;
 }
