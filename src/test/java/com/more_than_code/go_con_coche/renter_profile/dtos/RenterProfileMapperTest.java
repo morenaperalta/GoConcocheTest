@@ -69,7 +69,7 @@ class RenterProfileMapperTest {
     @Test
     @DisplayName("Should return RenterProfile instance from request")
     void toEntity_shouldReturnRenterProfileInstance() {
-        RenterProfileRequest request = new RenterProfileRequest(
+        RenterProfileUpdateRequest request = new RenterProfileUpdateRequest(
                 TypeLicense.B,
                 "12345678A",
                 LocalDate.of(2026, 12, 31),

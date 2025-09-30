@@ -12,16 +12,16 @@ import java.time.LocalDate;
 
 @Schema(description = "Request to create a renter profile")
 public record RenterProfileRequest(
-        @Schema(description = "Type of driver's license", example = "B", required = true)
+        @Schema(description = "Type of driver's license", example = "B")
         @NotNull(message = "License type is mandatory") TypeLicense typeLicense,
 
-        @Schema(description = "Driver's license number", example = "12345678A", required = true)
+        @Schema(description = "Driver's license number", example = "12345678A")
         @NotBlank(message = "License number is mandatory") String licenseNumber,
 
-        @Schema(description = "License expiration date (format: yyyy-MM-dd)", example = "2026-12-31", required = true) @Future(message = "The license can't be expired")
+        @Schema(description = "License expiration date (format: yyyy-MM-dd)", example = "2026-12-31") @Future(message = "The license can't be expired")
         @JsonFormat(pattern = "yyyy-MM-dd") LocalDate expiredDate,
 
-        @Schema(description = "Driver's license image", type = "string", format = "binary", required = false)
+        @Schema(description = "Driver's license image", type = "string", format = "binary")
         MultipartFile image)
 {
 }
