@@ -20,6 +20,6 @@ public class Location {
     @Column(name = "city", nullable = false)
     private String city;
 
-    @Column(name = "district", nullable = false)
-    private  String district;
+    @Column(name = "address", nullable = false)
+    private  String address;
 }
