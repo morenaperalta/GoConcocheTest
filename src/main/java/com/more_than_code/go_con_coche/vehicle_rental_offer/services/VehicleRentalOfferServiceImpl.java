@@ -1,8 +1,10 @@
 package com.more_than_code.go_con_coche.vehicle_rental_offer.services;
 
+import com.more_than_code.go_con_coche.global.EntityNotFoundException;
 import com.more_than_code.go_con_coche.location.Location;
 import com.more_than_code.go_con_coche.location.services.LocationServiceImpl;
 import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
+import com.more_than_code.go_con_coche.owner_profile.OwnerProfileRepository;
 import com.more_than_code.go_con_coche.owner_profile.service.OwnerProfileService;
 import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import com.more_than_code.go_con_coche.registered_user.services.UserAuthService;
@@ -15,6 +17,7 @@ import com.more_than_code.go_con_coche.vehicle_rental_offer.models.RentalOfferSl
 import com.more_than_code.go_con_coche.vehicle_rental_offer.models.VehicleRentalOffer;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.repositories.VehicleRentalOfferRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,6 +31,7 @@ public class VehicleRentalOfferServiceImpl implements VehicleRentalOfferService 
     private final RentalOfferMapper rentalOfferMapper;
     private final VehicleServiceImpl vehicleService;
     private final LocationServiceImpl locationService;
+    private final OwnerProfileRepository ownerProfileRepository;
     private final OwnerProfileService ownerProfileService;
     private final UserAuthService userService;
 
@@ -37,7 +41,9 @@ public class VehicleRentalOfferServiceImpl implements VehicleRentalOfferService 
             throw new IllegalArgumentException("End date-time must be after start date-time");
         }
         RegisteredUser owner = userService.getAuthenticatedUser();
-        OwnerProfile ownerProfile = ownerProfileService.getOwnerProfileObj(owner.getId());
+        OwnerProfile ownerProfile = ownerProfileRepository.findByRegisteredUserId(owner.getId())
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "id", String.valueOf(owner.getId())));
+
         Vehicle vehicle = vehicleService.getVehicleByIdObj(rentalOfferRequest.vehicleId());
         Location location = locationService.getLocationByIdObj(rentalOfferRequest.locationId());
 
@@ -53,6 +59,28 @@ public class VehicleRentalOfferServiceImpl implements VehicleRentalOfferService 
         rentalOffer.setSlots(generateSlots(rentalOffer));
         VehicleRentalOffer savedOffer = offerRepository.save(rentalOffer);
         return rentalOfferMapper.toRentalOfferResponse(savedOffer);
+    }
+
+    @Override
+    public List<RentalOfferResponse> getMyRentalOffers() {
+        RegisteredUser owner = userService.getAuthenticatedUser();
+        OwnerProfile ownerProfile = ownerProfileRepository.findByRegisteredUserId(owner.getId())
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "id", String.valueOf(owner.getId())));
+        List<VehicleRentalOffer> offers = offerRepository.findByOwnerId(ownerProfile.getId());
+        return offers.stream().map(rentalOfferMapper::toRentalOfferResponse).toList();
+    }
+
+    @Override
+    public void deleteRentalOffer(Long id) {
+        RegisteredUser owner = userService.getAuthenticatedUser();
+        OwnerProfile ownerProfile = ownerProfileRepository.findByRegisteredUserId(owner.getId())
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "id", String.valueOf(owner.getId())));
+        VehicleRentalOffer offer = offerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("VehicleRentalOffer", "id", String.valueOf(owner.getId())));
+        if(ownerProfile.getId() != offer.getOwner().getId()) {
+            throw new AccessDeniedException("You are not allowed to modify this vehicle rental offer");
+        }
+        offerRepository.deleteById(id);
     }
 
     private List<RentalOfferSlot> generateSlots(VehicleRentalOffer offer) {

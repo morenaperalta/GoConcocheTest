@@ -18,5 +18,7 @@ public interface VehicleRentalOfferRepository extends JpaRepository<VehicleRenta
                                    @Param("endDateTime") LocalDateTime endDateTime);
 
     List<VehicleRentalOffer> findByLocationIdAndIsAvailableTrue(Long locationId);
+
+    List<VehicleRentalOffer> findByOwnerId(Long id);
 }
 
