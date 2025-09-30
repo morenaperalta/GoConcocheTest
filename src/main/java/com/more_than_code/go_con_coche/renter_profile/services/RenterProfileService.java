@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface RenterProfileService {
     RenterProfileResponse createRenterProfile(RenterProfileRequest renterProfileRequest);
-    List<RenterProfileResponse> getAllRenterProfiles ();
+    RenterProfileResponse getRenterProfileByUsername(String username);
+    RenterProfileResponse getOwnRenterProfile();
+    List<RenterProfileResponse> getAllRenterProfiles();
 }

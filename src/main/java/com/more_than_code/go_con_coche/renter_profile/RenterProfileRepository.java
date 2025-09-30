@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface RenterProfileRepository extends JpaRepository<RenterProfile, Long> {
     boolean existsByRegisteredUser(RegisteredUser registeredUser);
-    Optional<RenterProfile> findByRegisteredUserId(Long registeredUserId);
+    Optional<RenterProfile> findByRegisteredUserId(Long id);
+    Optional<RenterProfile> findByRegisteredUserUsername(String username);
 }
