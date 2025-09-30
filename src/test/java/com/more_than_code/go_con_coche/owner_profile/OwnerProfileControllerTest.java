@@ -17,6 +17,8 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.util.List;
+
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests for OwnerProfileController")
 class OwnerProfileControllerTest {
@@ -65,4 +67,30 @@ class OwnerProfileControllerTest {
         assertEquals(responseDto, response.getBody());
         verify(ownerProfileService).getOwnerProfile();
     }
+
+    @Test
+    void getAllOwnerProfiles_ShouldReturnOkResponse() {
+        when(ownerProfileService.getAllOwnerProfiles()).thenReturn(List.of(responseDto));
+
+        ResponseEntity<List<OwnerProfileResponse>> response = ownerProfileController.getAllOwnerProfiles();
+
+        assertNotNull(response);
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(1, response.getBody().size());
+        assertEquals(responseDto, response.getBody().get(0));
+        verify(ownerProfileService).getAllOwnerProfiles();
+    }
+
+    @Test
+    void getOwnerProfileById_ShouldReturnOkResponse() {
+        when(ownerProfileService.getOwnerProfileById(1L)).thenReturn(responseDto);
+
+        ResponseEntity<OwnerProfileResponse> response = ownerProfileController.getOwnerProfileById(1L);
+
+        assertNotNull(response);
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(responseDto, response.getBody());
+        verify(ownerProfileService).getOwnerProfileById(1L);
+    }
+
 }
