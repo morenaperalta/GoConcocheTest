@@ -18,13 +18,13 @@ class LocationMapperTest {
         Location location = Location.builder()
                 .id(1L)
                 .city("Madrid")
-                .district("Centro")
+                .address("Pl Tirso de Molino, 9, 28002")
                 .build();
 
         LocationResponse response = mapper.toResponse(location);
 
         assertThat(response.id()).isEqualTo(1L);
         assertThat(response.city()).isEqualTo("Madrid");
-        assertThat(response.district()).isEqualTo("Centro");
+        assertThat(response.address()).isEqualTo("Pl Tirso de Molino, 9, 28002");
     }
 }
