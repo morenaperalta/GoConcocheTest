@@ -13,6 +13,11 @@ public class RenterProfileMapper {
                 .build();
     }
 
+    public RenterProfile toEntity(RenterProfileUpdateRequest request) {
+        return RenterProfile.builder()
+                .build();
+    }
+
     public RenterProfileResponse toResponse(RenterProfile renterProfile) {
         return RenterProfileResponse.builder()
                 .id(renterProfile.getId())
