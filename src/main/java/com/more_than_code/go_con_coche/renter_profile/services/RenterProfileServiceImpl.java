@@ -81,4 +81,13 @@ public class RenterProfileServiceImpl implements RenterProfileService{
 
         return renterProfileMapper.toResponse(renterProfile);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RenterProfile getRenterProfileObj() {
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        return renterProfileRepository.findByRegisteredUserId(authenticatedUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException(RenterProfile.class.getSimpleName(), "id", String.valueOf(authenticatedUser.getId())));
+    }
 }
