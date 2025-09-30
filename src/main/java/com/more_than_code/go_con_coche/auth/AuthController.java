@@ -5,7 +5,6 @@ import com.more_than_code.go_con_coche.auth.dtos.AuthResponse;
 import com.more_than_code.go_con_coche.auth.dtos.RegisterRequest;
 import com.more_than_code.go_con_coche.auth.dtos.RegisterResponse;
 import com.more_than_code.go_con_coche.auth.services.AuthService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,14 +24,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    @Operation(summary = "Register new user", description = "Creates a new user account and returns the registered user details")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest regicterDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(authService.register(regicterDto));
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Login users", description = "Login into a user account and returns login details")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest loginDto,
                                                      HttpServletResponse response) {
         AuthResponse userResponse = authService.authenticate(loginDto, response);
@@ -42,7 +39,6 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    @Operation(summary = "Refresh token", description = "Refresh token for users login into their accounts")
     public ResponseEntity<Void> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = authService.refreshToken(request, response);
         return ResponseEntity.ok()
