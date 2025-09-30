@@ -1,4 +1,4 @@
-package com.more_than_code.go_con_coche.vehicle_reservation;
+package com.more_than_code.go_con_coche.vehicle_reservation.models;
 
 public enum ReservationStatus {
     CONFIRMED,
