@@ -8,5 +8,5 @@ public interface OwnerProfileService {
     OwnerProfileResponse createOwnerProfile(OwnerProfileRequest ownerProfileRequest);
     OwnerProfileResponse getOwnerProfile();
 
-    OwnerProfile getOwnerProfileObj(Long id);
+    OwnerProfile getOwnerProfileObj();
 }
