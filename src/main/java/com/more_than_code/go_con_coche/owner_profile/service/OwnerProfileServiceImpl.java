@@ -56,10 +56,10 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
     }
 
 
-    public OwnerProfile getOwnerProfileObj(Long id) {
+    public OwnerProfile getOwnerProfileObj() {
         RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
 
-        return ownerProfileRepository.findById(id)
+        return ownerProfileRepository.findByRegisteredUserId(authenticatedUser.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "OwnerProfile",
                         "registeredUserId",

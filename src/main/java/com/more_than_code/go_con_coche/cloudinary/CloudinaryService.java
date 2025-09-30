@@ -50,7 +50,7 @@ public class CloudinaryService {
     public UploadResult resolveImage(MultipartFile image, DefaultImageType type) {
         try {
             if (image != null && !image.isEmpty()) {
-                return upload(image, "vehicles");
+                return upload(image, type.name());
             } else {
                 return uploadDefault(type);
             }
