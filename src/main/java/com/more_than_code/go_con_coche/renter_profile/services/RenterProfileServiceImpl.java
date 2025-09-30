@@ -10,11 +10,11 @@ import com.more_than_code.go_con_coche.registered_user.services.UserAuthService;
 import com.more_than_code.go_con_coche.renter_profile.dtos.RenterProfileMapper;
 import com.more_than_code.go_con_coche.renter_profile.RenterProfileRepository;
 import com.more_than_code.go_con_coche.renter_profile.dtos.RenterProfileRequest;
+import com.more_than_code.go_con_coche.renter_profile.dtos.RenterProfileUpdateRequest;
 import com.more_than_code.go_con_coche.renter_profile.dtos.RenterProfileResponse;
 
 import com.more_than_code.go_con_coche.renter_profile.models.RenterProfile;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,5 +80,49 @@ public class RenterProfileServiceImpl implements RenterProfileService{
         RenterProfile renterProfile = renterProfileRepository.findByRegisteredUserUsername(username).orElseThrow(() -> new EntityNotFoundException(RenterProfile.class.getSimpleName(), "username", username));
 
         return renterProfileMapper.toResponse(renterProfile);
+    }
+
+    @Override
+    @Transactional
+    public RenterProfileResponse updateRenterProfile(RenterProfileUpdateRequest renterProfileRequest) {
+
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        RenterProfile existingProfile = renterProfileRepository
+                .findByRegisteredUserId(authenticatedUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        RenterProfile.class.getSimpleName(),
+                        "user",
+                        authenticatedUser.getUsername()
+                ));
+
+        if (renterProfileRequest.typeLicense() != null) {
+            existingProfile.setTypeLicense(renterProfileRequest.typeLicense());
+        }
+
+        if (renterProfileRequest.licenseNumber() != null && !renterProfileRequest.licenseNumber().isBlank()) {
+            existingProfile.setLicenseNumber(renterProfileRequest.licenseNumber());
+        }
+
+        if (renterProfileRequest.expiredDate() != null) {
+            existingProfile.setExpiredDate(renterProfileRequest.expiredDate());
+        }
+
+        if (renterProfileRequest.image() != null) {
+            if (existingProfile.getPublicImageId() != null) {
+                cloudinaryService.delete(existingProfile.getPublicImageId());
+            }
+
+            UploadResult uploadResult = cloudinaryService.resolveImage(
+                    renterProfileRequest.image(),
+                    DefaultImageType.PROFILE
+            );
+            existingProfile.setImageURL(uploadResult.url());
+            existingProfile.setPublicImageId(uploadResult.publicId());
+        }
+
+        RenterProfile updatedProfile = renterProfileRepository.save(existingProfile);
+
+        return renterProfileMapper.toResponse(updatedProfile);
     }
 }

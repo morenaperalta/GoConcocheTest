@@ -9,6 +9,7 @@ import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import com.more_than_code.go_con_coche.registered_user.services.UserAuthService;
 import com.more_than_code.go_con_coche.renter_profile.dtos.RenterProfileMapper;
 import com.more_than_code.go_con_coche.renter_profile.dtos.RenterProfileRequest;
+import com.more_than_code.go_con_coche.renter_profile.dtos.RenterProfileUpdateRequest;
 import com.more_than_code.go_con_coche.renter_profile.dtos.RenterProfileResponse;
 import com.more_than_code.go_con_coche.renter_profile.models.RenterProfile;
 import com.more_than_code.go_con_coche.renter_profile.models.TypeLicense;
@@ -34,7 +35,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests for RenterProfileService")
-public class RenterProfileServiceTest {
+class RenterProfileServiceTest {
 
     @Mock
     private RenterProfileRepository renterProfileRepository;
@@ -50,6 +51,7 @@ public class RenterProfileServiceTest {
 
     private RegisteredUser user;
     private RenterProfileRequest request;
+    private RenterProfileUpdateRequest updateRequest;
     private RenterProfile renterProfile;
     private RenterProfileResponse responseDto;
     private UploadResult uploadResult;
@@ -65,6 +67,7 @@ public class RenterProfileServiceTest {
 
         uploadResult = new UploadResult("http://cloudinary.com/img.png", "publicId123");
         request = new RenterProfileRequest(TypeLicense.B, "abc123456", LocalDate.of(2026, 11, 26), mockFile);
+        updateRequest = new RenterProfileUpdateRequest(TypeLicense.C, null, null, null);
 
         renterProfile = RenterProfile.builder().id(1L).registeredUser(user).typeLicense(TypeLicense.B).licenseNumber("abc123456").expiredDate(LocalDate.of(2026, 11, 26)).imageURL("http://cloudinary.com/img.png").publicImageId("publicId123").build();
 
