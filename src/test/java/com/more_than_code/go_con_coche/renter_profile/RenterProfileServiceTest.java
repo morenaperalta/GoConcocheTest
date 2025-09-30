@@ -22,22 +22,25 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Tests for UserService")
+@DisplayName("Tests for RenterProfileService")
 public class RenterProfileServiceTest {
 
     @Mock
-    private  RenterProfileRepository renterProfileRepository;
+    private RenterProfileRepository renterProfileRepository;
     @Mock
-    private  UserAuthService userAuthService;
+    private UserAuthService userAuthService;
     @Mock
-    private  RenterProfileMapper renterProfileMapper;
+    private RenterProfileMapper renterProfileMapper;
     @Mock
-    private  CloudinaryService cloudinaryService;
+    private CloudinaryService cloudinaryService;
 
     @InjectMocks
     private RenterProfileServiceImpl renterProfileService;
@@ -47,51 +50,213 @@ public class RenterProfileServiceTest {
     private RenterProfile renterProfile;
     private RenterProfileResponse responseDto;
     private UploadResult uploadResult;
+    private MockMultipartFile mockFile;
 
     @BeforeEach
     void setUp() {
         user = new RegisteredUser();
         user.setUsername("testUser");
-        MockMultipartFile mockFile = new MockMultipartFile(
+        user.setId(5L);
+
+        mockFile = new MockMultipartFile(
                 "image",
                 "test.png",
                 "image/png",
                 "fake-image-content".getBytes()
         );
+
         uploadResult = new UploadResult("http://cloudinary.com/img.png", "publicId123");
-        request = new RenterProfileRequest(TypeLicense.B, "abc123456", LocalDate.of(2026,11,26), mockFile);
-        renterProfile = new RenterProfile();
-        responseDto = new RenterProfileResponse(1L, 5L, "B", "abc123456", LocalDate.of(2026,11,26), "/images/default-profile.jpg");
+        request = new RenterProfileRequest(
+                TypeLicense.B,
+                "abc123456",
+                LocalDate.of(2026, 11, 26),
+                mockFile
+        );
+
+        renterProfile = RenterProfile.builder()
+                .id(1L)
+                .registeredUser(user)
+                .typeLicense(TypeLicense.B)
+                .licenseNumber("abc123456")
+                .expiredDate(LocalDate.of(2026, 11, 26))
+                .imageURL("http://cloudinary.com/img.png")
+                .publicImageId("publicId123")
+                .build();
+
+        responseDto = new RenterProfileResponse(
+                1L,
+                5L,
+                "B",
+                "abc123456",
+                LocalDate.of(2026, 11, 26),
+                "http://cloudinary.com/img.png"
+        );
     }
 
     @Test
+    @DisplayName("Should create renter profile successfully when valid request")
     void createRenterProfile_WhenValidRequest_ShouldReturnResponse() {
-        when(renterProfileMapper.toEntity(request)).thenReturn(renterProfile);
+
         when(userAuthService.getAuthenticatedUser()).thenReturn(user);
         when(renterProfileRepository.existsByRegisteredUser(user)).thenReturn(false);
         when(cloudinaryService.resolveImage(request.image(), DefaultImageType.PROFILE))
-                .thenReturn(uploadResult); // 👈 faltaba este stub
+                .thenReturn(uploadResult);
         when(renterProfileRepository.save(any(RenterProfile.class))).thenReturn(renterProfile);
         when(renterProfileMapper.toResponse(renterProfile)).thenReturn(responseDto);
 
         RenterProfileResponse result = renterProfileService.createRenterProfile(request);
 
         assertNotNull(result);
-        assertEquals(responseDto, result);
-        verify(renterProfileRepository).save(renterProfile);
+        assertEquals(responseDto.id(), result.id());
+        assertEquals(responseDto.registeredUser(), result.registeredUser());
+        assertEquals(responseDto.typeLicense(), result.typeLicense());
+        assertEquals(responseDto.licenseNumber(), result.licenseNumber());
+        assertEquals(responseDto.expiredDate(), result.expiredDate());
+        assertEquals(responseDto.imageUrl(), result.imageUrl());
+
+        verify(userAuthService).getAuthenticatedUser();
+        verify(renterProfileRepository).existsByRegisteredUser(user);
         verify(cloudinaryService).resolveImage(request.image(), DefaultImageType.PROFILE);
+        verify(renterProfileRepository).save(any(RenterProfile.class));
+        verify(renterProfileMapper).toResponse(renterProfile);
     }
 
     @Test
+    @DisplayName("Should throw EntityAlreadyExistsException when user already has profile")
     void createRenterProfile_WhenUserAlreadyHasProfile_ShouldThrowException() {
-        when(renterProfileMapper.toEntity(request)).thenReturn(renterProfile);
+
         when(userAuthService.getAuthenticatedUser()).thenReturn(user);
         when(renterProfileRepository.existsByRegisteredUser(user)).thenReturn(true);
 
-        assertThrows(EntityAlreadyExistsException.class,
-                () -> renterProfileService.createRenterProfile(request));
+        EntityAlreadyExistsException exception = assertThrows(
+                EntityAlreadyExistsException.class,
+                () -> renterProfileService.createRenterProfile(request)
+        );
 
+        assertTrue(exception.getMessage().contains("RenterProfile"));
+        assertTrue(exception.getMessage().contains("testUser"));
+
+        verify(userAuthService).getAuthenticatedUser();
+        verify(renterProfileRepository).existsByRegisteredUser(user);
         verify(renterProfileRepository, never()).save(any());
         verify(cloudinaryService, never()).resolveImage(any(), any());
+        verify(renterProfileMapper, never()).toResponse(any());
+    }
+
+    @Test
+    @DisplayName("Should return all renter profiles")
+    void getAllRenterProfiles_ShouldReturnListOfProfiles() {
+
+        RenterProfile profile1 = RenterProfile.builder()
+                .id(1L)
+                .registeredUser(user)
+                .typeLicense(TypeLicense.B)
+                .licenseNumber("abc123456")
+                .expiredDate(LocalDate.of(2026, 11, 26))
+                .imageURL("http://cloudinary.com/img1.png")
+                .build();
+
+        RenterProfile profile2 = RenterProfile.builder()
+                .id(2L)
+                .registeredUser(user)
+                .typeLicense(TypeLicense.C)
+                .licenseNumber("xyz789012")
+                .expiredDate(LocalDate.of(2027, 5, 15))
+                .imageURL("http://cloudinary.com/img2.png")
+                .build();
+
+        List<RenterProfile> profiles = Arrays.asList(profile1, profile2);
+
+        RenterProfileResponse response1 = new RenterProfileResponse(
+                1L, 5L, "B", "abc123456",
+                LocalDate.of(2026, 11, 26), "http://cloudinary.com/img1.png"
+        );
+
+        RenterProfileResponse response2 = new RenterProfileResponse(
+                2L, 5L, "C", "xyz789012",
+                LocalDate.of(2027, 5, 15), "http://cloudinary.com/img2.png"
+        );
+
+        when(renterProfileRepository.findAll()).thenReturn(profiles);
+        when(renterProfileMapper.toResponse(profile1)).thenReturn(response1);
+        when(renterProfileMapper.toResponse(profile2)).thenReturn(response2);
+
+        List<RenterProfileResponse> result = renterProfileService.getAllRenterProfiles();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(response1.id(), result.get(0).id());
+        assertEquals(response2.id(), result.get(1).id());
+
+        verify(renterProfileRepository).findAll();
+        verify(renterProfileMapper, times(2)).toResponse(any(RenterProfile.class));
+    }
+
+    @Test
+    @DisplayName("Should return empty list when no profiles exist")
+    void getAllRenterProfiles_WhenNoProfiles_ShouldReturnEmptyList() {
+
+        when(renterProfileRepository.findAll()).thenReturn(List.of());
+
+        List<RenterProfileResponse> result = renterProfileService.getAllRenterProfiles();
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        verify(renterProfileRepository).findAll();
+        verify(renterProfileMapper, never()).toResponse(any());
+    }
+
+    @Test
+    @DisplayName("Should create profile with null image using default")
+    void createRenterProfile_WithNullImage_ShouldUseDefaultImage() {
+
+        RenterProfileRequest requestWithNullImage = new RenterProfileRequest(
+                TypeLicense.B,
+                "abc123456",
+                LocalDate.of(2026, 11, 26),
+                null
+        );
+
+        UploadResult defaultUploadResult = new UploadResult(
+                "http://cloudinary.com/default.png",
+                "defaultPublicId"
+        );
+
+        RenterProfile profileWithDefaultImage = RenterProfile.builder()
+                .id(1L)
+                .registeredUser(user)
+                .typeLicense(TypeLicense.B)
+                .licenseNumber("abc123456")
+                .expiredDate(LocalDate.of(2026, 11, 26))
+                .imageURL("http://cloudinary.com/default.png")
+                .publicImageId("defaultPublicId")
+                .build();
+
+        RenterProfileResponse responseWithDefault = new RenterProfileResponse(
+                1L,
+                5L,
+                "B",
+                "abc123456",
+                LocalDate.of(2026, 11, 26),
+                "http://cloudinary.com/default.png"
+        );
+
+        when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+        when(renterProfileRepository.existsByRegisteredUser(user)).thenReturn(false);
+        when(cloudinaryService.resolveImage(null, DefaultImageType.PROFILE))
+                .thenReturn(defaultUploadResult);
+        when(renterProfileRepository.save(any(RenterProfile.class)))
+                .thenReturn(profileWithDefaultImage);
+        when(renterProfileMapper.toResponse(profileWithDefaultImage))
+                .thenReturn(responseWithDefault);
+
+        RenterProfileResponse result = renterProfileService.createRenterProfile(requestWithNullImage);
+
+        assertNotNull(result);
+        assertEquals("http://cloudinary.com/default.png", result.imageUrl());
+
+        verify(cloudinaryService).resolveImage(null, DefaultImageType.PROFILE);
+        verify(renterProfileRepository).save(any(RenterProfile.class));
     }
 }

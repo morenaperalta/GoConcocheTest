@@ -13,8 +13,11 @@ import com.more_than_code.go_con_coche.renter_profile.dtos.RenterProfileResponse
 
 import com.more_than_code.go_con_coche.renter_profile.models.RenterProfile;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,13 @@ public class RenterProfileServiceImpl implements RenterProfileService{
     private final UserAuthService userAuthService;
     private final RenterProfileMapper renterProfileMapper;
     private final CloudinaryService cloudinaryService;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RenterProfileResponse> getAllRenterProfiles() {
+        List<RenterProfile> renterProfiles = renterProfileRepository.findAll();
+        return renterProfiles.stream().map(renterProfileMapper::toResponse).toList();
+    }
 
     @Override
     @Transactional
