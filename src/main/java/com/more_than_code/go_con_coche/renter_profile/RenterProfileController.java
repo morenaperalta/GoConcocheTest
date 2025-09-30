@@ -29,6 +29,15 @@ public class RenterProfileController {
 
     private final RenterProfileService renterProfileService;
 
+    @Operation(summary = "Create a new renter profile", description = "Creates a new renter profile with driver's license information. Allows uploading a license image. Only accessible by users with RENTER role.", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Renter profile created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RenterProfileResponse.class))), @ApiResponse(responseCode = "400", description = "Invalid input data - Check required fields", content = @Content), @ApiResponse(responseCode = "403", description = "Access denied - RENTER role required", content = @Content), @ApiResponse(responseCode = "401", description = "Unauthorized - Invalid or missing token", content = @Content)})
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('RENTER')")
+    public ResponseEntity<RenterProfileResponse> createRenterProfile(@Parameter(description = "Renter profile data including license type, number, expiration date and image", required = true) @Valid @ModelAttribute RenterProfileRequest renterProfileRequest) {
+        RenterProfileResponse createdRenterProfile = renterProfileService.createRenterProfile(renterProfileRequest);
+        return new ResponseEntity<>(createdRenterProfile, HttpStatus.CREATED);
+    }
+
     @Operation(summary = "Get all renter profiles", description = "Retrieves a list of all renter profiles registered in the system. Only accessible by administrators.", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successfully retrieved list of profiles", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RenterProfileResponse.class))), @ApiResponse(responseCode = "403", description = "Access denied - ADMIN role required", content = @Content), @ApiResponse(responseCode = "401", description = "Unauthorized - Invalid or missing token", content = @Content)})
     @GetMapping("")
@@ -38,12 +47,17 @@ public class RenterProfileController {
         return new ResponseEntity<>(renterProfileResponses, HttpStatus.OK);
     }
 
-    @Operation(summary = "Create a new renter profile", description = "Creates a new renter profile with driver's license information. Allows uploading a license image. Only accessible by users with RENTER role.", security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Renter profile created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RenterProfileResponse.class))), @ApiResponse(responseCode = "400", description = "Invalid input data - Check required fields", content = @Content), @ApiResponse(responseCode = "403", description = "Access denied - RENTER role required", content = @Content), @ApiResponse(responseCode = "401", description = "Unauthorized - Invalid or missing token", content = @Content)})
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping("/me")
     @PreAuthorize("hasAnyRole('RENTER')")
-    public ResponseEntity<RenterProfileResponse> createRenterProfile(@Parameter(description = "Renter profile data including license type, number, expiration date and image", required = true) @Valid @ModelAttribute RenterProfileRequest renterProfileRequest) {
-        RenterProfileResponse createdRenterProfile = renterProfileService.createRenterProfile(renterProfileRequest);
-        return new ResponseEntity<>(createdRenterProfile, HttpStatus.CREATED);
+    public ResponseEntity<RenterProfileResponse> getOwnRenterProfile() {
+        RenterProfileResponse ownRenterProfile = renterProfileService.getOwnRenterProfile();
+        return new ResponseEntity<>(ownRenterProfile, HttpStatus.OK);
+    }
+
+    @GetMapping("/{username}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<RenterProfileResponse> getRenterProfileByUsername(@PathVariable String username) {
+        RenterProfileResponse ownRenterProfile = renterProfileService.getRenterProfileByUsername(username);
+        return new ResponseEntity<>(ownRenterProfile, HttpStatus.OK);
     }
 }

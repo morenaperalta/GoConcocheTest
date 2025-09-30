@@ -4,6 +4,7 @@ import com.more_than_code.go_con_coche.cloudinary.CloudinaryService;
 import com.more_than_code.go_con_coche.cloudinary.DefaultImageType;
 import com.more_than_code.go_con_coche.cloudinary.UploadResult;
 import com.more_than_code.go_con_coche.global.EntityAlreadyExistsException;
+import com.more_than_code.go_con_coche.global.EntityNotFoundException;
 import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import com.more_than_code.go_con_coche.registered_user.services.UserAuthService;
 import com.more_than_code.go_con_coche.renter_profile.dtos.RenterProfileMapper;
@@ -26,13 +27,6 @@ public class RenterProfileServiceImpl implements RenterProfileService{
     private final UserAuthService userAuthService;
     private final RenterProfileMapper renterProfileMapper;
     private final CloudinaryService cloudinaryService;
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<RenterProfileResponse> getAllRenterProfiles() {
-        List<RenterProfile> renterProfiles = renterProfileRepository.findAll();
-        return renterProfiles.stream().map(renterProfileMapper::toResponse).toList();
-    }
 
     @Override
     @Transactional
@@ -58,5 +52,33 @@ public class RenterProfileServiceImpl implements RenterProfileService{
         RenterProfile savedRenterProfile = renterProfileRepository.save(renterProfile);
 
         return renterProfileMapper.toResponse(savedRenterProfile);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RenterProfileResponse> getAllRenterProfiles() {
+        List<RenterProfile> renterProfiles = renterProfileRepository.findAll();
+        return renterProfiles.stream().map(renterProfileMapper::toResponse).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RenterProfileResponse getOwnRenterProfile(){
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        RenterProfile renterProfile = renterProfileRepository
+                .findByRegisteredUserId(authenticatedUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException(RenterProfile.class.getSimpleName(), "id", String.valueOf(authenticatedUser.getId())));
+
+        return renterProfileMapper.toResponse(renterProfile);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RenterProfileResponse getRenterProfileByUsername(String username){
+
+        RenterProfile renterProfile = renterProfileRepository.findByRegisteredUserUsername(username).orElseThrow(() -> new EntityNotFoundException(RenterProfile.class.getSimpleName(), "username", username));
+
+        return renterProfileMapper.toResponse(renterProfile);
     }
 }
