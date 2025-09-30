@@ -99,4 +99,42 @@ class OwnerProfileServiceImplTest {
         verify(cloudinaryService, never()).resolveImage(any(), any());
     }
 
+    @Test
+    void getOwnerProfile_WhenProfileExists_ShouldReturnResponse() {
+        when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+        when(ownerProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.of(ownerProfile));
+        when(ownerProfileMapper.toResponse(ownerProfile)).thenReturn(responseDto);
+
+        OwnerProfileResponse result = ownerProfileService.getOwnerProfile();
+
+        assertNotNull(result);
+        assertEquals(responseDto, result);
+    }
+
+    @Test
+    void getOwnerProfile_WhenProfileDoesNotExist_ShouldThrowException() {
+        when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+        when(ownerProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> ownerProfileService.getOwnerProfile());
+    }
+
+    @Test
+    void getOwnerProfileObj_WhenProfileExists_ShouldReturnOwnerProfile() {
+        when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+        when(ownerProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.of(ownerProfile));
+
+        OwnerProfile result = ownerProfileService.getOwnerProfileObj();
+
+        assertNotNull(result);
+        assertEquals(ownerProfile, result);
+    }
+
+    @Test
+    void getOwnerProfileObj_WhenProfileDoesNotExist_ShouldThrowException() {
+        when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+        when(ownerProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> ownerProfileService.getOwnerProfileObj());
+    }
 }
