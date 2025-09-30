@@ -34,10 +34,9 @@ public class RenterProfile {
     @Column (nullable = false)
     private TypeLicense typeLicense;
 
-    @Column(name = "licence_number", nullable = false)
+    @Column(name = "license_number", nullable = false)
     private String licenseNumber;
 
-    @CreationTimestamp
     @Column(name = "expired_date")
     public LocalDate expiredDate;
 
