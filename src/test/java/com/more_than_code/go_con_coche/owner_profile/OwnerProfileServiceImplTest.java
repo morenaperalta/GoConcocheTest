@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -137,4 +138,38 @@ class OwnerProfileServiceImplTest {
 
         assertThrows(EntityNotFoundException.class, () -> ownerProfileService.getOwnerProfileObj());
     }
+
+    @Test
+    void getAllOwnerProfiles_ShouldReturnListOfResponses() {
+        when(ownerProfileRepository.findAll()).thenReturn(List.of(ownerProfile));
+        when(ownerProfileMapper.toResponse(ownerProfile)).thenReturn(responseDto);
+
+        List<OwnerProfileResponse> result = ownerProfileService.getAllOwnerProfiles();
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(responseDto, result.get(0));
+        verify(ownerProfileRepository).findAll();
+    }
+
+    @Test
+    void getOwnerProfileById_WhenExists_ShouldReturnResponse() {
+        when(ownerProfileRepository.findById(1L)).thenReturn(Optional.of(ownerProfile));
+        when(ownerProfileMapper.toResponse(ownerProfile)).thenReturn(responseDto);
+
+        OwnerProfileResponse result = ownerProfileService.getOwnerProfileById(1L);
+
+        assertNotNull(result);
+        assertEquals(responseDto, result);
+        verify(ownerProfileRepository).findById(1L);
+    }
+
+    @Test
+    void getOwnerProfileById_WhenNotExists_ShouldThrowException() {
+        when(ownerProfileRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> ownerProfileService.getOwnerProfileById(1L));
+        verify(ownerProfileRepository).findById(1L);
+    }
+
 }
