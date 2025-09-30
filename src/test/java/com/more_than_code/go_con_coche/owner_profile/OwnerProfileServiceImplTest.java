@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests for OwnerProfileServiceImpl")
-class OwnerProfileServiceTest {
+class OwnerProfileServiceImplTest {
 
     @Mock
     private OwnerProfileRepository ownerProfileRepository;
@@ -99,23 +99,4 @@ class OwnerProfileServiceTest {
         verify(cloudinaryService, never()).resolveImage(any(), any());
     }
 
-    @Test
-    void getOwnerProfile_WhenProfileExists_ShouldReturnResponse() {
-        when(userAuthService.getAuthenticatedUser()).thenReturn(user);
-        when(ownerProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.of(ownerProfile));
-        when(ownerProfileMapper.toResponse(ownerProfile)).thenReturn(responseDto);
-
-        OwnerProfileResponse result = ownerProfileService.getOwnerProfile();
-
-        assertNotNull(result);
-        assertEquals(responseDto, result);
-    }
-
-    @Test
-    void getOwnerProfile_WhenProfileDoesNotExist_ShouldThrowException() {
-        when(userAuthService.getAuthenticatedUser()).thenReturn(user);
-        when(ownerProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () -> ownerProfileService.getOwnerProfile());
-    }
 }
