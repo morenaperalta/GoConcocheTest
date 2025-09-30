@@ -10,9 +10,6 @@ public class RenterProfileMapper {
 
     public RenterProfile toEntity(RenterProfileRequest request) {
         return RenterProfile.builder()
-                .typeLicense(request.typeLicense())
-                .licenseNumber(request.licenseNumber())
-                .expiredDate(request.expiredDate())
                 .build();
     }
 

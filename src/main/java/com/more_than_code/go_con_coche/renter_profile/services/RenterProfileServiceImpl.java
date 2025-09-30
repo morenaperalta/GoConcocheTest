@@ -28,17 +28,22 @@ public class RenterProfileServiceImpl implements RenterProfileService{
     @Transactional
     public RenterProfileResponse createRenterProfile(RenterProfileRequest renterProfileRequest) {
 
-        RenterProfile renterProfile = renterProfileMapper.toEntity(renterProfileRequest);
-        RegisteredUser user = userAuthService.getAuthenticatedUser();
-        renterProfile.setRegisteredUser(user);
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
 
-        if (renterProfileRepository.existsByRegisteredUser(user)){
-         throw new EntityAlreadyExistsException(RenterProfile.class.getSimpleName(), "user", user.getUsername());
+        if (renterProfileRepository.existsByRegisteredUser(authenticatedUser)){
+            throw new EntityAlreadyExistsException(RenterProfile.class.getSimpleName(), "user", authenticatedUser.getUsername());
         }
 
         UploadResult uploadResult = cloudinaryService.resolveImage(renterProfileRequest.image(), DefaultImageType.PROFILE);
-        renterProfile.setImageURL(uploadResult.url());
-        renterProfile.setPublicImageId(uploadResult.publicId());
+
+        RenterProfile renterProfile = RenterProfile.builder()
+                .registeredUser(authenticatedUser)
+                .typeLicense(renterProfileRequest.typeLicense())
+                .licenseNumber(renterProfileRequest.licenseNumber())
+                .expiredDate(renterProfileRequest.expiredDate())
+                .imageURL(uploadResult.url())
+                .publicImageId(uploadResult.publicId())
+                .build();
 
         RenterProfile savedRenterProfile = renterProfileRepository.save(renterProfile);
 
