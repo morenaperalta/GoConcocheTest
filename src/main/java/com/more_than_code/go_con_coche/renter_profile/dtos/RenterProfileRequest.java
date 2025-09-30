@@ -17,7 +17,7 @@ public record RenterProfileRequest(
         String licenseNumber,
 
         @Future(message = "The license can't be expired")
-        @JsonFormat(pattern = "yyy-MM-dd")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate expiredDate,
 
         MultipartFile image
