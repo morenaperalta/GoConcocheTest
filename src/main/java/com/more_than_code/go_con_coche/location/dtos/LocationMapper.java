@@ -8,13 +8,13 @@ public class LocationMapper {
     public LocationResponse toResponse(Location location) {
         return new LocationResponse(location.getId(),
                 location.getCity(),
-                location.getDistrict());
+                location.getAddress());
     }
 
     public Location toEntity(LocationRequest request) {
         return Location.builder()
                 .city(request.city())
-                .district(request.district())
+                .address(request.address())
                 .build();
     }
 }
