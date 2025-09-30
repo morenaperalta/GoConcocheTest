@@ -16,6 +16,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OwnerProfileServiceImpl implements OwnerProfileService{
@@ -65,6 +67,22 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
                         "registeredUserId",
                         String.valueOf(authenticatedUser.getId())
                 ));
+    }
+
+    @Override
+    public List<OwnerProfileResponse> getAllOwnerProfiles() {
+        return ownerProfileRepository.findAll()
+                .stream()
+                .map(ownerProfileMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public OwnerProfileResponse getOwnerProfileById(Long id) {
+        OwnerProfile ownerProfile = ownerProfileRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "id", id.toString()));
+
+        return ownerProfileMapper.toResponse(ownerProfile);
     }
 
 }

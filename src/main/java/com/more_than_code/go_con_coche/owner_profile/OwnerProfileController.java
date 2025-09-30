@@ -7,7 +7,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/owner-profiles")
@@ -25,5 +28,17 @@ public class OwnerProfileController {
     public ResponseEntity<OwnerProfileResponse> getOwnerProfile() {
         OwnerProfileResponse ownerProfileResponse = ownerProfileService.getOwnerProfile();
         return ResponseEntity.ok(ownerProfileResponse);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
+    public ResponseEntity<List<OwnerProfileResponse>> getAllOwnerProfiles() {
+        return ResponseEntity.ok(ownerProfileService.getAllOwnerProfiles());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}")
+    public ResponseEntity<OwnerProfileResponse> getOwnerProfileById(@PathVariable Long id) {
+        return ResponseEntity.ok(ownerProfileService.getOwnerProfileById(id));
     }
 }
