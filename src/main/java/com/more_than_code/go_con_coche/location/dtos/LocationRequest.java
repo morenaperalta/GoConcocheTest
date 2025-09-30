@@ -9,7 +9,7 @@ public record LocationRequest(@NotBlank
                               @Pattern(regexp = "^[A-Za-z\\s\\-]+$", message = "City can contain only Latin letters, spaces or hyphens")
                               String city,
                               @NotBlank
-                              @Size(min = 2, max = 50)
+                              @Size(min = 6, max = 80)
                               @Pattern(regexp = "^[\\w\\s\\-.,'()!@#$%^&*+={}\\[\\]|;:\"<>?/]+$", message = "Address can contain Latin letters, numbers and special characters on one line")
                               String address) {
 }

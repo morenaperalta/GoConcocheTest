@@ -20,7 +20,7 @@ class LocationRequestTest {
 
     @Test
     void validLocationRequest_success() {
-        LocationRequest request = new LocationRequest("Madrid", "Centro");
+        LocationRequest request = new LocationRequest("Madrid", "Pl Tirso de Molina, 9");
 
         Set<ConstraintViolation<LocationRequest>> violations = validator.validate(request);
 
@@ -29,7 +29,7 @@ class LocationRequestTest {
 
     @Test
     void blankCity_NoValidation() {
-        LocationRequest request = new LocationRequest(" ", "Centro");
+        LocationRequest request = new LocationRequest(" ", "Pl Tirso de Molina, 9");
 
         Set<ConstraintViolation<LocationRequest>> violations = validator.validate(request);
 
@@ -37,18 +37,18 @@ class LocationRequestTest {
     }
 
     @Test
-    void tooShortDistrict_NoValidation() {
-        LocationRequest request = new LocationRequest("Madrid", "A");
+    void tooShortAddress_NoValidation() {
+        LocationRequest request = new LocationRequest("Madrid", "C");
 
         Set<ConstraintViolation<LocationRequest>> violations = validator.validate(request);
 
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("district"));
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("address"));
     }
 
 
     @Test
-    void district_shouldBeValid() {
-        LocationRequest request = new LocationRequest("San Sebastian", "Donostia-Kursaal");
+    void address_shouldBeValid() {
+        LocationRequest request = new LocationRequest("San Sebastian", "Federico Garcia Lorca Pasealekua, 1, 20012");
         Set<ConstraintViolation<LocationRequest>> violations = validator.validate(request);
 
         assertThat(violations).isEmpty();
