@@ -56,7 +56,7 @@ public class SecurityConfig {
                         auth
                                 // Public endpoints
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/health", "/actuator/**").permitAll()
+                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-ui/index.html", "/v3/api-docs/**", "/health", "/actuator/**").permitAll()
 
                                 // Renter profile endpoints
                                 .requestMatchers(HttpMethod.GET, "/api/renter-profiles/me").hasRole("RENTER")
