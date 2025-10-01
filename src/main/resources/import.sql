@@ -19,7 +19,7 @@ INSERT INTO user_role (user_id, role_id) VALUES (3, 3);
 INSERT INTO owner_profiles (registered_user_id, image_url) VALUES (3, 'https://somexample.com/images/prof.jpg');
 
 --renter_profiles
-INSERT INTO renter_profiles (registered_user_id, type_license, licence_number, expired_date, image_url) VALUES (2, 'B', 'LIC123456', '2026-12-31', 'https://somexample.com/images/anna.jpg');
+INSERT INTO renter_profiles (registered_user_id, type_license, license_number, expired_date, image_url) VALUES (2, 'B', 'LIC123456', '2026-12-31', 'https://somexample.com/images/anna.jpg');
 
 --locations
 INSERT INTO locations (city, district, address) VALUES ('Valencia', 'El Carmen', 'C/Guillem de Castro');
