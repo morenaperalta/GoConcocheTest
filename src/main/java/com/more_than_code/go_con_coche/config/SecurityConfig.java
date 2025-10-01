@@ -54,11 +54,9 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth
-                                // Public endpoints
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-ui/index.html", "/v3/api-docs/**", "/health", "/actuator/**").permitAll()
 
-                                // Renter profile endpoints
                                 .requestMatchers(HttpMethod.GET, "/api/renter-profiles/me").hasRole("RENTER")
                                 .requestMatchers(HttpMethod.GET, "/api/renter-profiles/{username}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/renter-profiles").hasRole("ADMIN")
@@ -66,31 +64,26 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PUT, "/api/renter-profiles/**").hasRole("RENTER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/renter-profiles/**").hasRole("RENTER")
 
-                                // Admin endpoints - roles and users management
                                 .requestMatchers(HttpMethod.GET, "/api/roles", "/api/registered-users").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/api/roles").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/api/roles/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasRole("ADMIN")
 
-                                // Owner profile endpoints
                                 .requestMatchers(HttpMethod.GET, "/api/owner-profiles").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/api/owner-profiles").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.PUT, "/api/owner-profiles/**").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/owner-profiles/me").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/owner-profiles/{id}").hasRole("ADMIN")
 
-                                // Vehicle endpoints
                                 .requestMatchers(HttpMethod.GET, "/api/vehicles/my").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.POST, "/api/vehicles").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.PUT, "/api/vehicles/**").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/vehicles/**").hasRole("OWNER")
 
-                                // Vehicle rental offer endpoints
                                 .requestMatchers(HttpMethod.POST, "/api/vehicle-rental-offers").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.PUT, "/api/vehicle-rental-offers/**").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/vehicle-rental-offers/**").hasRole("OWNER")
 
-                                // Vehicle reservation endpoints
                                 .requestMatchers(HttpMethod.POST, "/api/vehicle-reservations").hasRole("RENTER")
                                 .requestMatchers(HttpMethod.PUT, "/api/vehicle-reservations/**").hasRole("RENTER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/vehicle-reservations/**").hasRole("RENTER")
