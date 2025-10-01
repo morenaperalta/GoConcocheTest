@@ -87,9 +87,10 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
 
     @Override
     @Transactional
-    public OwnerProfileResponse updateOwnerProfile(Long id, OwnerProfileRequest request) {
-        OwnerProfile ownerProfile = ownerProfileRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "id", id.toString()));
+    public OwnerProfileResponse updateOwnerProfile(OwnerProfileRequest request) {
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+        OwnerProfile ownerProfile = ownerProfileRepository.findByRegisteredUserId(authenticatedUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "registeredUserId", authenticatedUser.getId().toString()));
 
         UploadResult uploadResult = cloudinaryService.resolveImage(request.image(), DefaultImageType.PROFILE);
 
