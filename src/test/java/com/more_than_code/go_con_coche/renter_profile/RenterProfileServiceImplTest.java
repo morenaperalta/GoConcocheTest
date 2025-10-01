@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests for RenterProfileService")
-class RenterProfileServiceTest {
+class RenterProfileServiceImplTest {
 
     @Mock
     private RenterProfileRepository renterProfileRepository;
