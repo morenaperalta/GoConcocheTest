@@ -16,4 +16,5 @@ public interface OwnerProfileService {
     OwnerProfileResponse getOwnerProfileById(Long id);
     OwnerProfileResponse updateMyOwnerProfile (OwnerProfileRequest request);
     void deleteMyOwnerProfile();
+    void deleteOwnerProfileById(Long id);
 }

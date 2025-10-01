@@ -52,4 +52,10 @@ public class OwnerProfileController {
         ownerProfileService.deleteMyOwnerProfile();
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOwnerProfileById(@PathVariable Long id) {
+        ownerProfileService.deleteOwnerProfileById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
