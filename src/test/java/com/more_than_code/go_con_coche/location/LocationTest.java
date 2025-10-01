@@ -22,9 +22,10 @@ class LocationTest {
         Location loc1 = new Location();
         loc1.setId(1L);
         loc1.setCity("Barcelona");
+        loc1.setDistrict("Eixample");
         loc1.setAddress("Av Catalunya, 22, 08025");
 
-        Location loc2 = new Location(1L, "Barcelona", "Av Catalunya, 22, 08025");
+        Location loc2 = new Location(1L, "Barcelona", "Eixample", "Av Catalunya, 22, 08025");
 
         assertThat(loc1).isEqualTo(loc2);
         assertThat(loc1.hashCode()).isEqualTo(loc2.hashCode());

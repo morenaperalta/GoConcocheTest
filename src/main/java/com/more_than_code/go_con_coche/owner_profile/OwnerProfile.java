@@ -33,5 +33,6 @@ public class OwnerProfile {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VehicleRentalOffer> offers = new ArrayList<>();
 
+    @Column(name = "public_image_id")
     private String publicImageId;
 }

@@ -76,7 +76,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/owner-profiles").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/api/owner-profiles").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.PUT, "/api/owner-profiles/**").hasRole("OWNER")
-                                .requestMatchers(HttpMethod.DELETE, "/api/owner-profiles/**").hasRole("OWNER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/owner-profiles/me").hasRole("OWNER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/owner-profiles/{id}").hasRole("ADMIN")
 
                                 // Vehicle endpoints
                                 .requestMatchers(HttpMethod.GET, "/api/vehicles/my").hasRole("OWNER")

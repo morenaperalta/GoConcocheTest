@@ -33,7 +33,7 @@ public class RenterProfile {
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Type of license is mandatory")
-    @Column (nullable = false)
+    @Column (name = "type_license", nullable = false)
     private TypeLicense typeLicense;
 
     @Column(name = "license_number", nullable = false)
@@ -46,5 +46,6 @@ public class RenterProfile {
     @Column(name = "image_url")
     private String imageURL;
 
+    @Column(name = "public_image_id")
     private String publicImageId;
 }

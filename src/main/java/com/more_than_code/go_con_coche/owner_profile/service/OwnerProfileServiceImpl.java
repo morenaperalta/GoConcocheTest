@@ -20,14 +20,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OwnerProfileServiceImpl implements OwnerProfileService{
+public class OwnerProfileServiceImpl implements OwnerProfileService {
     private final OwnerProfileRepository ownerProfileRepository;
     private final UserAuthService userAuthService;
     private final OwnerProfileMapper ownerProfileMapper;
     private final CloudinaryService cloudinaryService;
 
     @Override
-    public OwnerProfileResponse createOwnerProfile (OwnerProfileRequest ownerProfileRequest){
+    public OwnerProfileResponse createOwnerProfile(OwnerProfileRequest ownerProfileRequest) {
 
         RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
 
@@ -87,7 +87,7 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
 
     @Override
     @Transactional
-    public OwnerProfileResponse updateOwnerProfile(OwnerProfileRequest request) {
+    public OwnerProfileResponse updateMyOwnerProfile(OwnerProfileRequest request) {
         RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
         OwnerProfile ownerProfile = ownerProfileRepository.findByRegisteredUserId(authenticatedUser.getId())
                 .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "registeredUserId", authenticatedUser.getId().toString()));
@@ -105,4 +105,34 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
         return ownerProfileMapper.toResponse(updated);
     }
 
+    @Override
+    @Transactional
+    public void deleteMyOwnerProfile() {
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        OwnerProfile ownerProfile = ownerProfileRepository
+                .findByRegisteredUserId(authenticatedUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "registeredUserId", String.valueOf(authenticatedUser.getId())));
+
+        if (ownerProfile.getPublicImageId() != null) {
+            cloudinaryService.delete(ownerProfile.getPublicImageId());
+        }
+
+        ownerProfileRepository.delete(ownerProfile);
+    }
+
+    @Override
+    @Transactional
+    public void deleteOwnerProfileById(Long id) {
+        OwnerProfile ownerProfile = ownerProfileRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "id", id.toString()));
+
+        if (ownerProfile.getPublicImageId() != null) {
+            cloudinaryService.delete(ownerProfile.getPublicImageId());
+        }
+
+        ownerProfileRepository.delete(ownerProfile);
+    }
 }
+
+

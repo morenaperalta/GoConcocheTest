@@ -93,4 +93,39 @@ class OwnerProfileControllerTest {
         verify(ownerProfileService).getOwnerProfileById(1L);
     }
 
+    @Test
+    void updateMyOwnerProfile_ShouldReturnUpdatedResponse() {
+        when(ownerProfileService.updateMyOwnerProfile(request)).thenReturn(responseDto);
+
+        ResponseEntity<OwnerProfileResponse> response = ownerProfileController.updateMyOwnerProfile(request);
+
+        assertNotNull(response);
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(responseDto, response.getBody());
+        verify(ownerProfileService).updateMyOwnerProfile(request);
+    }
+
+    @Test
+    void deleteMyOwnerProfile_ShouldReturnNoContent() {
+        doNothing().when(ownerProfileService).deleteMyOwnerProfile();
+
+        ResponseEntity<Void> response = ownerProfileController.deleteMyOwnerProfile();
+
+        assertNotNull(response);
+        assertEquals(204, response.getStatusCodeValue());
+        verify(ownerProfileService).deleteMyOwnerProfile();
+    }
+
+    @Test
+    void deleteOwnerProfileById_ShouldReturnNoContent() {
+        doNothing().when(ownerProfileService).deleteOwnerProfileById(1L);
+
+        ResponseEntity<Void> response = ownerProfileController.deleteOwnerProfileById(1L);
+
+        assertNotNull(response);
+        assertEquals(204, response.getStatusCodeValue());
+        verify(ownerProfileService).deleteOwnerProfileById(1L);
+    }
+
+
 }

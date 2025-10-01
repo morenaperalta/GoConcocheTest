@@ -43,7 +43,19 @@ public class OwnerProfileController {
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<OwnerProfileResponse> updateOwnerProfile(@Valid @ModelAttribute OwnerProfileRequest request) {
-        return ResponseEntity.ok(ownerProfileService.updateOwnerProfile(request));
+    public ResponseEntity<OwnerProfileResponse> updateMyOwnerProfile(@Valid @ModelAttribute OwnerProfileRequest request) {
+        return ResponseEntity.ok(ownerProfileService.updateMyOwnerProfile(request));
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMyOwnerProfile() {
+        ownerProfileService.deleteMyOwnerProfile();
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOwnerProfileById(@PathVariable Long id) {
+        ownerProfileService.deleteOwnerProfileById(id);
+        return ResponseEntity.noContent().build();
     }
 }
