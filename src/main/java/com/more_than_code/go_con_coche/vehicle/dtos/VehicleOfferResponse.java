@@ -7,9 +7,11 @@ import lombok.Builder;
 @Builder
 public record VehicleOfferResponse(Long id,
                                    String model,
+                                   String brand,
                                    int year,
                                    String color,
                                    Seater seats,
+                                   Integer childSeatsNumber,
                                    FuelTypeCar fuelTypeCar,
                                    String fuelConsumption,
                                    String imageUrl) {

@@ -1,4 +1,4 @@
-package com.more_than_code.go_con_coche.vehicle_reservation;
+package com.more_than_code.go_con_coche.vehicle_reservation.models;
 
 import com.more_than_code.go_con_coche.renter_profile.models.RenterProfile;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.models.VehicleRentalOffer;
