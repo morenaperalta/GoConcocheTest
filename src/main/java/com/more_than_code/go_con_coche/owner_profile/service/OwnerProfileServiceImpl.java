@@ -85,4 +85,23 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
         return ownerProfileMapper.toResponse(ownerProfile);
     }
 
+    @Override
+    @Transactional
+    public OwnerProfileResponse updateOwnerProfile(Long id, OwnerProfileRequest request) {
+        OwnerProfile ownerProfile = ownerProfileRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "id", id.toString()));
+
+        UploadResult uploadResult = cloudinaryService.resolveImage(request.image(), DefaultImageType.PROFILE);
+
+        if (ownerProfile.getPublicImageId() != null) {
+            cloudinaryService.delete(ownerProfile.getPublicImageId());
+        }
+
+        ownerProfile.setImageURL(uploadResult.url());
+        ownerProfile.setPublicImageId(uploadResult.publicId());
+
+        OwnerProfile updated = ownerProfileRepository.save(ownerProfile);
+        return ownerProfileMapper.toResponse(updated);
+    }
+
 }
