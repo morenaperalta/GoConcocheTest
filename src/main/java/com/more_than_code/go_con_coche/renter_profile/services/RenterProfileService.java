@@ -8,10 +8,13 @@ import com.more_than_code.go_con_coche.renter_profile.models.RenterProfile;
 import java.util.List;
 
 public interface RenterProfileService {
-    RenterProfileResponse createRenterProfile(RenterProfileRequest renterProfileRequest);
-    RenterProfileResponse getRenterProfileByUsername(String username);
-    RenterProfileResponse getOwnRenterProfile();
     List<RenterProfileResponse> getAllRenterProfiles();
-    RenterProfileResponse updateRenterProfile(RenterProfileUpdateRequest renterProfileRequest);
+    RenterProfileResponse createRenterProfile(RenterProfileRequest renterProfileRequest);
+    RenterProfileResponse getRenterProfileById(Long id);
+    RenterProfileResponse getRenterProfileByUsername(String username);
+    RenterProfileResponse getMyRenterProfile();
     RenterProfile getRenterProfileObj();
+    RenterProfileResponse updateRenterProfile(RenterProfileUpdateRequest renterProfileRequest);
+    void deleteRenterProfileById(Long id);
+    void deleteMyRenterProfile();
 }
