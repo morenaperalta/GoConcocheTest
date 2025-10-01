@@ -41,4 +41,9 @@ public class OwnerProfileController {
     public ResponseEntity<OwnerProfileResponse> getOwnerProfileById(@PathVariable Long id) {
         return ResponseEntity.ok(ownerProfileService.getOwnerProfileById(id));
     }
+
+    @PutMapping("/profile")
+    public ResponseEntity<OwnerProfileResponse> updateOwnerProfile(@Valid @ModelAttribute OwnerProfileRequest request) {
+        return ResponseEntity.ok(ownerProfileService.updateOwnerProfile(request));
+    }
 }
