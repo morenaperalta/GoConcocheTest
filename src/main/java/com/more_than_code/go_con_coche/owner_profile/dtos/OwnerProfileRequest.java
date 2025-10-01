@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Schema(description = "Request to create a owner profile")
 public record OwnerProfileRequest (
-        @Schema(description = "Add your profile image")
+        @Schema(type = "string", format = "binary", description = "Profile image file")
         MultipartFile image
 ){
 }

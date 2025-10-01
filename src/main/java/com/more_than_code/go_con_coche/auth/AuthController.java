@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@Tag(name = "Auth", description = "Operations related to authentication and authorization.")
+@Tag(name = "Auth", description = "Operations related to authentication and authorization. Public endpoint (no authentication required).")
 public class AuthController {
     private final AuthService authService;
 

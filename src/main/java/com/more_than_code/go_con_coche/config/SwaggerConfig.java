@@ -17,7 +17,6 @@ public class SwaggerConfig {
                         .title("Go Con Coche API")
                         .description("API REST Documentation for our final project")
                         .version("v1.0"))
-                // 🔹 Añadir seguridad JWT
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new io.swagger.v3.oas.models.Components()
                         .addSecuritySchemes("bearerAuth",

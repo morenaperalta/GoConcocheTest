@@ -8,9 +8,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,9 +24,11 @@ public class OwnerProfileController {
     private final OwnerProfileService ownerProfileService;
 
     @Operation(summary = "Create a new owner profile", description = "Creates a profile for the authenticated owner")
-    @PostMapping("")
-    public ResponseEntity<OwnerProfileResponse> createOwnerProfile(@Valid @ModelAttribute OwnerProfileRequest ownerProfileRequest){
-        OwnerProfileResponse createdOwnerProfile = ownerProfileService.createOwnerProfile(ownerProfileRequest);
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<OwnerProfileResponse> createOwnerProfile(
+            @RequestPart("image") MultipartFile image) {
+        OwnerProfileRequest request = new OwnerProfileRequest(image);
+        OwnerProfileResponse createdOwnerProfile = ownerProfileService.createOwnerProfile(request);
         return new ResponseEntity<>(createdOwnerProfile, HttpStatus.CREATED);
     }
 
@@ -50,9 +54,14 @@ public class OwnerProfileController {
     }
 
     @Operation(summary = "Update my owner profile", description = "Updates the profile of the authenticated owner")
-    @PutMapping("/profile")
-    public ResponseEntity<OwnerProfileResponse> updateMyOwnerProfile(@Valid @ModelAttribute OwnerProfileRequest request) {
-        return ResponseEntity.ok(ownerProfileService.updateMyOwnerProfile(request));
+    @PutMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<OwnerProfileResponse> updateMyOwnerProfile(
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+
+        OwnerProfileRequest request = new OwnerProfileRequest(image);
+        OwnerProfileResponse updatedProfile = ownerProfileService.updateMyOwnerProfile(request);
+
+        return ResponseEntity.ok(updatedProfile);
     }
 
     @Operation(summary = "Delete my owner profile", description = "Deletes the profile of the authenticated owner")
