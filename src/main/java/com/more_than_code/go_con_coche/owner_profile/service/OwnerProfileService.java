@@ -14,5 +14,5 @@ public interface OwnerProfileService {
 
     List<OwnerProfileResponse> getAllOwnerProfiles();
     OwnerProfileResponse getOwnerProfileById(Long id);
-    OwnerProfileResponse updateOwnerProfile(Long id, OwnerProfileRequest ownerProfileRequest);
+    OwnerProfileResponse updateOwnerProfile (OwnerProfileRequest request);
 }
