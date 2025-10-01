@@ -172,4 +172,73 @@ class OwnerProfileServiceImplTest {
         verify(ownerProfileRepository).findById(1L);
     }
 
+    @Test
+    void updateMyOwnerProfile_WhenProfileExists_ShouldReturnUpdatedResponse() {
+        when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+        when(ownerProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.of(ownerProfile));
+        when(cloudinaryService.resolveImage(request.image(), DefaultImageType.PROFILE)).thenReturn(uploadResult);
+        when(ownerProfileMapper.toResponse(any(OwnerProfile.class))).thenReturn(responseDto);
+        when(ownerProfileRepository.save(any(OwnerProfile.class))).thenReturn(ownerProfile);
+
+        OwnerProfileResponse result = ownerProfileService.updateMyOwnerProfile(request);
+
+        assertNotNull(result);
+        assertEquals(responseDto, result);
+
+        verify(cloudinaryService).delete(anyString());
+        verify(ownerProfileRepository).save(any(OwnerProfile.class));
+        verify(cloudinaryService).resolveImage(request.image(), DefaultImageType.PROFILE);
+    }
+
+
+    @Test
+    void updateMyOwnerProfile_WhenProfileDoesNotExist_ShouldThrowException() {
+        when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+        when(ownerProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> ownerProfileService.updateMyOwnerProfile(request));
+        verify(cloudinaryService, never()).resolveImage(any(), any());
+    }
+
+    @Test
+    void deleteMyOwnerProfile_WhenProfileExists_ShouldDeleteProfile() {
+        when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+        when(ownerProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.of(ownerProfile));
+
+        ownerProfileService.deleteMyOwnerProfile();
+
+        verify(cloudinaryService).delete(ownerProfile.getPublicImageId());
+        verify(ownerProfileRepository).delete(ownerProfile);
+    }
+
+    @Test
+    void deleteMyOwnerProfile_WhenProfileDoesNotExist_ShouldThrowException() {
+        when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+        when(ownerProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> ownerProfileService.deleteMyOwnerProfile());
+        verify(cloudinaryService, never()).delete(any());
+        verify(ownerProfileRepository, never()).delete(any());
+    }
+
+    @Test
+    void deleteOwnerProfileById_WhenProfileExists_ShouldDeleteProfile() {
+        when(ownerProfileRepository.findById(1L)).thenReturn(Optional.of(ownerProfile));
+
+        ownerProfileService.deleteOwnerProfileById(1L);
+
+        verify(cloudinaryService).delete(ownerProfile.getPublicImageId());
+        verify(ownerProfileRepository).delete(ownerProfile);
+    }
+
+    @Test
+    void deleteOwnerProfileById_WhenProfileDoesNotExist_ShouldThrowException() {
+        when(ownerProfileRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> ownerProfileService.deleteOwnerProfileById(1L));
+        verify(cloudinaryService, never()).delete(any());
+        verify(ownerProfileRepository, never()).delete(any());
+    }
+
+
 }
