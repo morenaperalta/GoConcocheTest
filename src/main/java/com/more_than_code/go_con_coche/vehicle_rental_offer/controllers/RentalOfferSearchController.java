@@ -6,6 +6,7 @@ import com.more_than_code.go_con_coche.vehicle_rental_offer.dtos.search.SearchOf
 import com.more_than_code.go_con_coche.vehicle_rental_offer.services.RentalOfferSearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +18,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/vehicle-rental-offers")
 @RequiredArgsConstructor
+@Tag(name = "Rental Offers", description = "Operations to search and retrieve rental offers")
 public class RentalOfferSearchController {
     private final RentalOfferSearchService searchService;
 
+    @Operation(summary = "Search available rental offers", description = "Search rental offers by location and date range")
     @GetMapping("/search")
     public ResponseEntity<List<SearchOfferResponse>> searchOffers(@RequestBody SearchOfferRequest request) {
         List<SearchOfferResponse> offers = searchService.searchAvailableOffers(request.locationId(), request.startDateTime(), request.endDateTime());
         return ResponseEntity.ok(offers);
     }
 
+    @Operation(summary = "Search offers by city", description = "Search rental offers filtered by city and optional date range")
     @GetMapping("/search/by-city")
-    @Operation(summary = "Search offers by city")
     public ResponseEntity<List<SearchOfferResponse>> searchOffersByCriteria(
             @Parameter(description = "City name (case insensitive, partial match)")
             @RequestParam(required = false) String city,

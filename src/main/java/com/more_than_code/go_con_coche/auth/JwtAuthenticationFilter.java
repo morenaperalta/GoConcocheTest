@@ -23,6 +23,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        String path = request.getServletPath();
+
+        if (path.startsWith("/api/auth") ||
+                path.startsWith("/swagger") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-ui") ||
+                path.startsWith("/health") ||
+                path.startsWith("/actuator")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+
         SecurityContext context = SecurityContextHolder.getContext();
         String jwtToken = request.getHeader("Authorization");
 
@@ -30,6 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
         jwtToken = jwtToken.substring(7);
         String username = jwtService.extractSubject(jwtToken);
         if (username != null && jwtService.validateToken(jwtToken) && jwtService.extractTokenType(jwtToken).equals("access_token")) {
