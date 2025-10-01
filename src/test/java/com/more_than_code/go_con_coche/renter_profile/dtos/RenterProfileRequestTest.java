@@ -26,7 +26,6 @@ class RenterProfileRequestTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }
-
     @Nested
     @DisplayName("Valid request tests")
     class ValidRequestTests {

@@ -202,18 +202,18 @@ class RenterProfileServiceTest {
     }
 
     @Nested
-    @DisplayName("getOwnRenterProfile() tests")
-    class GetOwnRenterProfileTests {
+    @DisplayName("getMyRenterProfile() tests")
+    class GetMyRenterProfileTests {
 
         @Test
         @DisplayName("Should return own renter profile when user is authenticated")
-        void getOwnRenterProfile_WhenUserAuthenticated_ShouldReturnProfile() {
+        void getMyRenterProfile_WhenUserAuthenticated_ShouldReturnProfile() {
 
             when(userAuthService.getAuthenticatedUser()).thenReturn(user);
             when(renterProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.of(renterProfile));
             when(renterProfileMapper.toResponse(renterProfile)).thenReturn(responseDto);
 
-            RenterProfileResponse result = renterProfileService.getOwnRenterProfile();
+            RenterProfileResponse result = renterProfileService.getMyRenterProfile();
 
             assertNotNull(result);
             assertEquals(responseDto.id(), result.id());
@@ -230,12 +230,12 @@ class RenterProfileServiceTest {
 
         @Test
         @DisplayName("Should throw EntityNotFoundException when own profile does not exist")
-        void getOwnRenterProfile_WhenProfileNotFound_ShouldThrowException() {
+        void getMyRenterProfile_WhenProfileNotFound_ShouldThrowException() {
 
             when(userAuthService.getAuthenticatedUser()).thenReturn(user);
             when(renterProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.empty());
 
-            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> renterProfileService.getOwnRenterProfile());
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> renterProfileService.getMyRenterProfile());
 
             assertTrue(exception.getMessage().contains("RenterProfile"));
             assertTrue(exception.getMessage().contains("5"));
@@ -288,6 +288,177 @@ class RenterProfileServiceTest {
 
             verify(renterProfileRepository).findByRegisteredUserUsername(username);
             verify(renterProfileMapper, never()).toResponse(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("getRenterProfileById() tests")
+    class GetRenterProfileByIdTests {
+
+        @Test
+        @DisplayName("Should return renter profile by ID when profile exists")
+        void getRenterProfileById_WhenProfileExists_ShouldReturnProfile() {
+
+            Long profileId = 5L;
+
+            when(renterProfileRepository.findByRegisteredUserId(profileId)).thenReturn(Optional.of(renterProfile));
+            when(renterProfileMapper.toResponse(renterProfile)).thenReturn(responseDto);
+
+            RenterProfileResponse result = renterProfileService.getRenterProfileById(profileId);
+
+            assertNotNull(result);
+            assertEquals(responseDto.id(), result.id());
+            assertEquals(responseDto.registeredUser(), result.registeredUser());
+            assertEquals(responseDto.typeLicense(), result.typeLicense());
+            assertEquals(responseDto.licenseNumber(), result.licenseNumber());
+            assertEquals(responseDto.expiredDate(), result.expiredDate());
+            assertEquals(responseDto.imageUrl(), result.imageUrl());
+
+            verify(renterProfileRepository).findByRegisteredUserId(profileId);
+            verify(renterProfileMapper).toResponse(renterProfile);
+        }
+
+        @Test
+        @DisplayName("Should throw EntityNotFoundException when profile not found by ID")
+        void getRenterProfileById_WhenProfileNotFound_ShouldThrowException() {
+
+            Long profileId = 999L;
+
+            when(renterProfileRepository.findByRegisteredUserId(profileId)).thenReturn(Optional.empty());
+
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> renterProfileService.getRenterProfileById(profileId));
+
+            assertTrue(exception.getMessage().contains("RenterProfile"));
+            assertTrue(exception.getMessage().contains("999"));
+
+            verify(renterProfileRepository).findByRegisteredUserId(profileId);
+            verify(renterProfileMapper, never()).toResponse(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("deleteMyRenterProfile() tests")
+    class DeleteMyRenterProfileTests {
+
+        @Test
+        @DisplayName("Should delete own renter profile successfully")
+        void deleteMyRenterProfile_WhenProfileExists_ShouldDeleteProfile() {
+
+            when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+            when(renterProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.of(renterProfile));
+
+            renterProfileService.deleteMyRenterProfile();
+
+            verify(userAuthService).getAuthenticatedUser();
+            verify(renterProfileRepository).findByRegisteredUserId(user.getId());
+            verify(cloudinaryService).delete(renterProfile.getPublicImageId());
+            verify(renterProfileRepository).delete(renterProfile);
+        }
+
+        @Test
+        @DisplayName("Should delete profile without deleting image when publicImageId is null")
+        void deleteMyRenterProfile_WhenNoPublicImageId_ShouldDeleteProfileWithoutDeletingImage() {
+
+            RenterProfile profileWithoutImage = RenterProfile.builder()
+                    .id(1L)
+                    .registeredUser(user)
+                    .typeLicense(TypeLicense.B)
+                    .licenseNumber("abc123456")
+                    .expiredDate(LocalDate.of(2026, 11, 26))
+                    .imageURL("http://cloudinary.com/img.png")
+                    .publicImageId(null)
+                    .build();
+
+            when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+            when(renterProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.of(profileWithoutImage));
+
+            renterProfileService.deleteMyRenterProfile();
+
+            verify(userAuthService).getAuthenticatedUser();
+            verify(renterProfileRepository).findByRegisteredUserId(user.getId());
+            verify(cloudinaryService, never()).delete(any());
+            verify(renterProfileRepository).delete(profileWithoutImage);
+        }
+
+        @Test
+        @DisplayName("Should throw EntityNotFoundException when own profile not found")
+        void deleteMyRenterProfile_WhenProfileNotFound_ShouldThrowException() {
+
+            when(userAuthService.getAuthenticatedUser()).thenReturn(user);
+            when(renterProfileRepository.findByRegisteredUserId(user.getId())).thenReturn(Optional.empty());
+
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> renterProfileService.deleteMyRenterProfile());
+
+            assertTrue(exception.getMessage().contains("RenterProfile"));
+            assertTrue(exception.getMessage().contains("5"));
+
+            verify(userAuthService).getAuthenticatedUser();
+            verify(renterProfileRepository).findByRegisteredUserId(user.getId());
+            verify(cloudinaryService, never()).delete(any());
+            verify(renterProfileRepository, never()).delete(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("deleteRenterProfileById() tests")
+    class DeleteRenterProfileByIdTests {
+
+        @Test
+        @DisplayName("Should delete renter profile by ID successfully")
+        void deleteRenterProfileById_WhenProfileExists_ShouldDeleteProfile() {
+
+            Long profileId = 1L;
+
+            when(renterProfileRepository.findById(profileId)).thenReturn(Optional.of(renterProfile));
+
+            renterProfileService.deleteRenterProfileById(profileId);
+
+            verify(renterProfileRepository).findById(profileId);
+            verify(cloudinaryService).delete(renterProfile.getPublicImageId());
+            verify(renterProfileRepository).delete(renterProfile);
+        }
+
+        @Test
+        @DisplayName("Should delete profile by ID without deleting image when publicImageId is null")
+        void deleteRenterProfileById_WhenNoPublicImageId_ShouldDeleteProfileWithoutDeletingImage() {
+
+            Long profileId = 1L;
+
+            RenterProfile profileWithoutImage = RenterProfile.builder()
+                    .id(1L)
+                    .registeredUser(user)
+                    .typeLicense(TypeLicense.B)
+                    .licenseNumber("abc123456")
+                    .expiredDate(LocalDate.of(2026, 11, 26))
+                    .imageURL("http://cloudinary.com/img.png")
+                    .publicImageId(null)
+                    .build();
+
+            when(renterProfileRepository.findById(profileId)).thenReturn(Optional.of(profileWithoutImage));
+
+            renterProfileService.deleteRenterProfileById(profileId);
+
+            verify(renterProfileRepository).findById(profileId);
+            verify(cloudinaryService, never()).delete(any());
+            verify(renterProfileRepository).delete(profileWithoutImage);
+        }
+
+        @Test
+        @DisplayName("Should throw EntityNotFoundException when profile not found by ID")
+        void deleteRenterProfileById_WhenProfileNotFound_ShouldThrowException() {
+
+            Long profileId = 999L;
+
+            when(renterProfileRepository.findById(profileId)).thenReturn(Optional.empty());
+
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> renterProfileService.deleteRenterProfileById(profileId));
+
+            assertTrue(exception.getMessage().contains("RenterProfile"));
+            assertTrue(exception.getMessage().contains("999"));
+
+            verify(renterProfileRepository).findById(profileId);
+            verify(cloudinaryService, never()).delete(any());
+            verify(renterProfileRepository, never()).delete(any());
         }
     }
 }
