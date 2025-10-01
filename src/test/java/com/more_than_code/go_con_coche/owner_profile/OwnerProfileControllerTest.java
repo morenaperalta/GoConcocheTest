@@ -46,14 +46,18 @@ class OwnerProfileControllerTest {
 
     @Test
     void createOwnerProfile_ShouldReturnCreatedResponse() {
-        when(ownerProfileService.createOwnerProfile(request)).thenReturn(responseDto);
+        MockMultipartFile mockFile = new MockMultipartFile("image", "test.png", "image/png", "fake-image-content".getBytes()
+        );
 
-        ResponseEntity<OwnerProfileResponse> response = ownerProfileController.createOwnerProfile(request);
+        OwnerProfileResponse responseDto = new OwnerProfileResponse(1L, 1L, "http://cloudinary.com/img.png");
+        when(ownerProfileService.createOwnerProfile(any(OwnerProfileRequest.class))).thenReturn(responseDto);
+
+        ResponseEntity<OwnerProfileResponse> response = ownerProfileController.createOwnerProfile(mockFile);
 
         assertNotNull(response);
         assertEquals(201, response.getStatusCodeValue());
         assertEquals(responseDto, response.getBody());
-        verify(ownerProfileService).createOwnerProfile(request);
+        verify(ownerProfileService).createOwnerProfile(any(OwnerProfileRequest.class));
     }
 
     @Test
@@ -95,15 +99,20 @@ class OwnerProfileControllerTest {
 
     @Test
     void updateMyOwnerProfile_ShouldReturnUpdatedResponse() {
-        when(ownerProfileService.updateMyOwnerProfile(request)).thenReturn(responseDto);
+        MockMultipartFile mockFile = new MockMultipartFile("image", "test-update.png", "image/png", "fake-image-content".getBytes()
+        );
 
-        ResponseEntity<OwnerProfileResponse> response = ownerProfileController.updateMyOwnerProfile(request);
+        OwnerProfileResponse responseDto = new OwnerProfileResponse(1L, 1L, "http://cloudinary.com/img-updated.png");
+        when(ownerProfileService.updateMyOwnerProfile(any(OwnerProfileRequest.class))).thenReturn(responseDto);
+
+        ResponseEntity<OwnerProfileResponse> response = ownerProfileController.updateMyOwnerProfile(mockFile);
 
         assertNotNull(response);
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(responseDto, response.getBody());
-        verify(ownerProfileService).updateMyOwnerProfile(request);
+        verify(ownerProfileService).updateMyOwnerProfile(any(OwnerProfileRequest.class));
     }
+
 
     @Test
     void deleteMyOwnerProfile_ShouldReturnNoContent() {
