@@ -87,7 +87,7 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
 
     @Override
     @Transactional
-    public OwnerProfileResponse updateOwnerProfile(OwnerProfileRequest request) {
+    public OwnerProfileResponse updateMyOwnerProfile(OwnerProfileRequest request) {
         RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
         OwnerProfile ownerProfile = ownerProfileRepository.findByRegisteredUserId(authenticatedUser.getId())
                 .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "registeredUserId", authenticatedUser.getId().toString()));
@@ -103,6 +103,22 @@ public class OwnerProfileServiceImpl implements OwnerProfileService{
 
         OwnerProfile updated = ownerProfileRepository.save(ownerProfile);
         return ownerProfileMapper.toResponse(updated);
+    }
+
+    @Override
+    @Transactional
+    public void deleteMyOwnerProfile() {
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        OwnerProfile ownerProfile = ownerProfileRepository
+                .findByRegisteredUserId(authenticatedUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "registeredUserId", String.valueOf(authenticatedUser.getId())));
+
+        if (ownerProfile.getPublicImageId() != null) {
+            cloudinaryService.delete(ownerProfile.getPublicImageId());
+        }
+
+        ownerProfileRepository.delete(ownerProfile);
     }
 
 }
