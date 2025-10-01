@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.security.core.parameters.P;
 
 @Schema(description = "Request to create a location")
 public record LocationRequest(
@@ -12,6 +13,12 @@ public record LocationRequest(
         @Pattern(regexp = "^[A-Za-z\\s\\-]+$", message = "City can contain only Latin letters, spaces or hyphens")
         @Schema(description = "Add the city name", example = "Valencia")
         String city,
+
+        @NotBlank
+        @Size(min = 2, max = 50)
+        @Pattern(regexp = "^[A-Za-z\\s\\-]+$", message = "District can contain only Latin letters, spaces or hyphens")
+        @Schema(description = "Add the district name", example = "El Carmen")
+        String district,
 
         @NotBlank
         @Size(min = 6, max = 80)

@@ -1,5 +1,6 @@
 package com.more_than_code.go_con_coche.vehicle_reservation.dtos;
 
+import com.more_than_code.go_con_coche.location.dtos.LocationMapper;
 import com.more_than_code.go_con_coche.vehicle.dtos.VehicleMapper;
 import com.more_than_code.go_con_coche.vehicle_reservation.models.VehicleReservation;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class VehicleReservationMapper {
 
     private final VehicleMapper vehicleMapper;
+    private final LocationMapper locationMapper;
 
     public VehicleReservationResponse toResponse(VehicleReservation reservation) {
         return VehicleReservationResponse.builder()
@@ -18,6 +20,7 @@ public class VehicleReservationMapper {
                 .renterProfileId(reservation.getRenter().getId())
                 .rentalOfferId(reservation.getRentalOffer().getId())
                 .vehicleDetails(vehicleMapper.toVehicleOfferResponse(reservation.getRentalOffer().getVehicle()))
+                .location(locationMapper.toResponse(reservation.getRentalOffer().getLocation()))
                 .startDateTime(reservation.getStartDateTime())
                 .endDateTime(reservation.getEndDateTime())
                 .totalPrice(reservation.getTotalPrice())
