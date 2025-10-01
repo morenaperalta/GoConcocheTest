@@ -18,44 +18,45 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "vin", nullable = false, unique = true)
     private String vin;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "plate_number", nullable = false, unique = true)
     private String plateNumber;
 
-    @Column (nullable = false, unique = true)
+    @Column (name = "insurance_number", nullable = false, unique = true)
     private String insuranceNumber;
 
-    @Column (nullable = false)
+    @Column (name = "model", nullable = false)
     private String model;
 
-    @Column (nullable = false)
+    @Column (name = "brand", nullable = false)
     private String brand;
 
-    @Column (nullable = false)
+    @Column (name = "year", nullable = false)
     private Integer year;
 
-    @Column (nullable = false)
+    @Column (name = "color", nullable = false)
     private String color;
 
     @Enumerated(EnumType.STRING)
-    @Column (nullable = false)
+    @Column (name = "seater", nullable = false)
     private Seater seater;
 
-    @Column
+    @Column (name = "child_seats_number")
     private Integer childSeatsNumber;
 
     @Enumerated(EnumType.STRING)
-    @Column (nullable = false)
+    @Column (name = "fuel_type_car", nullable = false)
     private FuelTypeCar fuelTypeCar;
 
-    @Column (nullable = false)
+    @Column (name = "fuel_consumption", nullable = false)
     private String fuelConsumption;
 
-    @Column (nullable = false)
+    @Column (name = "image_url", nullable = false)
     private String imageUrl;
 
+    @Column (name = "public_image_id")
     private String publicImageId;
 
     @ManyToOne(fetch = FetchType.LAZY)
