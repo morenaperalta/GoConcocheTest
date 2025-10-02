@@ -12,8 +12,8 @@ public interface RentalOfferSlotRepository extends JpaRepository<RentalOfferSlot
 
     @Query("SELECT s FROM RentalOfferSlot s " +
             "WHERE s.offer.id = :offerId " +
-            "AND s.slotStart >= :from " +
-            "AND s.slotEnd <= :to")
+            "AND s.slotStart < :to " +
+            "AND s.slotEnd > :from")
     List<RentalOfferSlot> findSlotsWithinPeriod(@Param("offerId") Long offerId,
                                                 @Param("from") LocalDateTime from,
                                                 @Param("to") LocalDateTime to);
