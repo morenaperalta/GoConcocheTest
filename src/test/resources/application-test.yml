@@ -31,9 +31,9 @@ spring:
       enabled: true
 
   cloudinary:
-    cloud-name: ${CLOUDINARY_CLOUD_NAME}
-    api-key: ${CLOUDINARY_API_KEY}
-    api-secret: ${CLOUDINARY_API_SECRET}
+    cloud-name: test_cloud_name
+    api-key: test_api_key
+    api-secret: test_api_secret
     default-images:
       PROFILE: /images/default-profile.jpg
       CAR: /images/default-car.jpg
