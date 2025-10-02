@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class EmailService {
+public class    EmailService {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
 
