@@ -1,5 +1,6 @@
 package com.more_than_code.go_con_coche.vehicle_rental_offer.services;
-import com.more_than_code.go_con_coche.vehicle_rental_offer.VehicleRentalofferSpecification;
+
+import com.more_than_code.go_con_coche.vehicle_rental_offer.VehicleRentalOfferSpecification;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.dtos.search.SearchCriteria;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.dtos.search.SearchOfferResponse;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.dtos.search.SlotInfo;
@@ -12,8 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +54,7 @@ public class RentalOfferSearchService {
 
     @Transactional(readOnly = true)
     public List<SearchOfferResponse> searchWithCriteria(SearchCriteria criteria) {
-        Specification<VehicleRentalOffer> specification = VehicleRentalofferSpecification.withCriteria(criteria);
+        Specification<VehicleRentalOffer> specification = VehicleRentalOfferSpecification.withCriteria(criteria);
         List<VehicleRentalOffer> offers = offerRepository.findAll(specification);
 
         List<SearchOfferResponse> result = new ArrayList<>();

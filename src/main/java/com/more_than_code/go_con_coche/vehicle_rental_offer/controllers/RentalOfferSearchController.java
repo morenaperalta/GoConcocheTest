@@ -29,28 +29,40 @@ public class RentalOfferSearchController {
         return ResponseEntity.ok(offers);
     }
 
-    @Operation(summary = "Search offers by city", description = "Search rental offers filtered by city and optional date range")
-    @GetMapping("/search/by-city")
+    @Operation(summary = "Search offers by criteria", description = "Search rental offers filtered by city, date range, vehicle model, and minimum seats.")
+    @GetMapping("/search/by-criteria")
     public ResponseEntity<List<SearchOfferResponse>> searchOffersByCriteria(
             @Parameter(description = "City name (case insensitive, partial match)")
-            @RequestParam(required = false) String city,
+            @RequestParam(required = false)
+            String city,
 
             @Parameter(description = "Start date and time")
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime startDateTime,
 
             @Parameter(description = "End date and time")
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime endDateTime,
+
+            @Parameter(description = "Vehicle model name (case insensitive, partial match)")
+            @RequestParam(required = false)
+            String model,
+
+            @Parameter(description = "Minimum number of seats required")
+            @RequestParam(required = false)
+            Integer seats
     ) {
         SearchCriteria criteria = SearchCriteria.builder()
                 .city(city)
                 .startDateTime(startDateTime)
                 .endDateTime(endDateTime)
+                .model(model)
+                .seats(seats)
                 .build();
 
         List<SearchOfferResponse> offers = searchService.searchWithCriteria(criteria);
         return ResponseEntity.ok(offers);
-
     }
 }

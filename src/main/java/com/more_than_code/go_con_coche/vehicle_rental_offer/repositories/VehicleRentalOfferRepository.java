@@ -23,4 +23,3 @@ public interface VehicleRentalOfferRepository extends JpaRepository<VehicleRenta
 
     List<VehicleRentalOffer> findByOwnerId(Long id);
 }
-
