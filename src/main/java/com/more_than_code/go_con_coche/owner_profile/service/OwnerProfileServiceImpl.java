@@ -1,0 +1,138 @@
+package com.more_than_code.go_con_coche.owner_profile.service;
+
+import com.more_than_code.go_con_coche.cloudinary.CloudinaryService;
+import com.more_than_code.go_con_coche.cloudinary.DefaultImageType;
+import com.more_than_code.go_con_coche.cloudinary.UploadResult;
+import com.more_than_code.go_con_coche.global.EntityAlreadyExistsException;
+import com.more_than_code.go_con_coche.global.EntityNotFoundException;
+import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
+import com.more_than_code.go_con_coche.owner_profile.OwnerProfileRepository;
+import com.more_than_code.go_con_coche.owner_profile.dtos.OwnerProfileMapper;
+import com.more_than_code.go_con_coche.owner_profile.dtos.OwnerProfileRequest;
+import com.more_than_code.go_con_coche.owner_profile.dtos.OwnerProfileResponse;
+import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
+import com.more_than_code.go_con_coche.registered_user.services.UserAuthService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class OwnerProfileServiceImpl implements OwnerProfileService {
+    private final OwnerProfileRepository ownerProfileRepository;
+    private final UserAuthService userAuthService;
+    private final OwnerProfileMapper ownerProfileMapper;
+    private final CloudinaryService cloudinaryService;
+
+    @Override
+    public OwnerProfileResponse createOwnerProfile(OwnerProfileRequest ownerProfileRequest) {
+
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        if (ownerProfileRepository.findByRegisteredUserId(authenticatedUser.getId()).isPresent()) {
+            throw new EntityAlreadyExistsException("Owner profile", "registeredUserId", authenticatedUser.getId().toString());
+        }
+        UploadResult uploadResult = cloudinaryService.resolveImage(ownerProfileRequest.image(), DefaultImageType.PROFILE);
+
+        OwnerProfile ownerProfile = OwnerProfile.builder()
+                .registeredUser(authenticatedUser)
+                .imageURL(uploadResult.url())
+                .publicImageId(uploadResult.publicId())
+                .build();
+
+        OwnerProfile savedOwnerProfile = ownerProfileRepository.save(ownerProfile);
+        return ownerProfileMapper.toResponse(savedOwnerProfile);
+    }
+
+    @Override
+    public OwnerProfileResponse getOwnerProfile() {
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        OwnerProfile ownerProfile = ownerProfileRepository
+                .findByRegisteredUserId(authenticatedUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "registeredUserId", String.valueOf(authenticatedUser.getId())));
+
+        return ownerProfileMapper.toResponse(ownerProfile);
+    }
+
+
+    public OwnerProfile getOwnerProfileObj() {
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        return ownerProfileRepository.findByRegisteredUserId(authenticatedUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "OwnerProfile",
+                        "registeredUserId",
+                        String.valueOf(authenticatedUser.getId())
+                ));
+    }
+
+    @Override
+    public List<OwnerProfileResponse> getAllOwnerProfiles() {
+        return ownerProfileRepository.findAll()
+                .stream()
+                .map(ownerProfileMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public OwnerProfileResponse getOwnerProfileById(Long id) {
+        OwnerProfile ownerProfile = ownerProfileRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "id", id.toString()));
+
+        return ownerProfileMapper.toResponse(ownerProfile);
+    }
+
+    @Override
+    @Transactional
+    public OwnerProfileResponse updateMyOwnerProfile(OwnerProfileRequest request) {
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+        OwnerProfile ownerProfile = ownerProfileRepository.findByRegisteredUserId(authenticatedUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "registeredUserId", authenticatedUser.getId().toString()));
+
+        UploadResult uploadResult = cloudinaryService.resolveImage(request.image(), DefaultImageType.PROFILE);
+
+        if (ownerProfile.getPublicImageId() != null) {
+            cloudinaryService.delete(ownerProfile.getPublicImageId());
+        }
+
+        ownerProfile.setImageURL(uploadResult.url());
+        ownerProfile.setPublicImageId(uploadResult.publicId());
+
+        OwnerProfile updated = ownerProfileRepository.save(ownerProfile);
+        return ownerProfileMapper.toResponse(updated);
+    }
+
+    @Override
+    @Transactional
+    public void deleteMyOwnerProfile() {
+        RegisteredUser authenticatedUser = userAuthService.getAuthenticatedUser();
+
+        OwnerProfile ownerProfile = ownerProfileRepository
+                .findByRegisteredUserId(authenticatedUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "registeredUserId", String.valueOf(authenticatedUser.getId())));
+
+        if (ownerProfile.getPublicImageId() != null) {
+            cloudinaryService.delete(ownerProfile.getPublicImageId());
+        }
+
+        ownerProfileRepository.delete(ownerProfile);
+    }
+
+    @Override
+    @Transactional
+    public void deleteOwnerProfileById(Long id) {
+        OwnerProfile ownerProfile = ownerProfileRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("OwnerProfile", "id", id.toString()));
+
+        if (ownerProfile.getPublicImageId() != null) {
+            cloudinaryService.delete(ownerProfile.getPublicImageId());
+        }
+
+        ownerProfileRepository.delete(ownerProfile);
+    }
+}
+
+

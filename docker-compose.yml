@@ -11,12 +11,18 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
       - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-uroot", "-p${DB_ROOT_PASSWORD}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - go-con-coche-network
 
   go-con-coche-app:
+    image: go-con-coche-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -29,6 +35,12 @@ services:
       SPRING_PROFILES_ACTIVE: docker
     depends_on:
       - go-con-coche-db
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ] # Health check command
+      interval: 30s # Check every 30 seconds
+      timeout: 10s # Timeout after 10 seconds
+      retries: 3 # Retry 3 times before marking as unhealthy
+      start_period: 60s
     networks:
       - go-con-coche-network
 

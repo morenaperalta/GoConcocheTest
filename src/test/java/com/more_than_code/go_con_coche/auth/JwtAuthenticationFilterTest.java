@@ -53,6 +53,7 @@ class JwtAuthenticationFilterTest {
 
     @Test
     void shouldPassWhenNoToken() throws ServletException, IOException {
+        when(request.getServletPath()).thenReturn("/api/protected");
         when(request.getHeader("Authorization")).thenReturn(null);
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
@@ -67,6 +68,7 @@ class JwtAuthenticationFilterTest {
         context.setAuthentication(new UsernamePasswordAuthenticationToken("user", null, List.of()));
         SecurityContextHolder.setContext(context);
 
+        when(request.getServletPath()).thenReturn("/api/protected");
         when(request.getHeader("Authorization")).thenReturn("Bearer sometoken");
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
@@ -80,6 +82,7 @@ class JwtAuthenticationFilterTest {
         String token = "Bearer validtoken";
         String username = "testUser";
 
+        when(request.getServletPath()).thenReturn("/api/protected");
         when(request.getHeader("Authorization")).thenReturn(token);
         when(jwtService.extractSubject("validtoken")).thenReturn(username);
         when(jwtService.validateToken("validtoken")).thenReturn(true);
@@ -119,6 +122,7 @@ class JwtAuthenticationFilterTest {
     void shouldNotAuthenticateWhenInvalidToken() throws ServletException, IOException {
         String token = "Bearer invalidtoken";
 
+        when(request.getServletPath()).thenReturn("/api/protected");
         when(request.getHeader("Authorization")).thenReturn(token);
         when(jwtService.extractSubject("invalidtoken")).thenReturn("testUser");
         when(jwtService.validateToken("invalidtoken")).thenReturn(false);

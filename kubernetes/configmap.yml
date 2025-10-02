@@ -1,0 +1,16 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  labels:
+    app: go-con-coche
+data:
+  db-url: "jdbc:mysql://mysql:3306/goconcoche"
+
+  show-sql: "false"
+
+  spring-profiles-active: "kubernetes"
+
+  hibernate-ddl-auto: "validate"
+  hibernate-dialect: "org.hibernate.dialect.MySQL8Dialect"

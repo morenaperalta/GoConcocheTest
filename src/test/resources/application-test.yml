@@ -6,7 +6,7 @@ spring:
     password:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none # was create-drop
     show-sql: true
     properties:
       hibernate:
@@ -24,16 +24,16 @@ spring:
     defer-datasource-initialization: true
   sql:
     init:
-      mode: never
-    defer-datasource-initialization: true
+      mode: always # was never
+    defer-datasource-initialization: false #was true
   h2:
     console:
       enabled: true
 
   cloudinary:
-    cloud-name: ${CLOUDINARY_CLOUD_NAME}
-    api-key: ${CLOUDINARY_API_KEY}
-    api-secret: ${CLOUDINARY_API_SECRET}
+    cloud-name: test_cloud_name
+    api-key: test_api_key
+    api-secret: test_api_secret
     default-images:
       PROFILE: /images/default-profile.jpg
       CAR: /images/default-car.jpg

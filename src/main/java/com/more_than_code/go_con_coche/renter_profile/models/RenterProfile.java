@@ -3,6 +3,7 @@ package com.more_than_code.go_con_coche.renter_profile.models;
 import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,18 +32,20 @@ public class RenterProfile {
     private RegisteredUser registeredUser;
 
     @Enumerated(EnumType.STRING)
-    @Column (nullable = false)
+    @NotNull(message = "Type of license is mandatory")
+    @Column (name = "type_license", nullable = false)
     private TypeLicense typeLicense;
 
-    @Column(name = "licence_number", nullable = false)
+    @Column(name = "license_number", nullable = false)
+    @NotBlank(message = "License number is mandatory")
     private String licenseNumber;
 
-    @CreationTimestamp
     @Column(name = "expired_date")
     public LocalDate expiredDate;
 
     @Column(name = "image_url")
     private String imageURL;
 
+    @Column(name = "public_image_id")
     private String publicImageId;
 }
