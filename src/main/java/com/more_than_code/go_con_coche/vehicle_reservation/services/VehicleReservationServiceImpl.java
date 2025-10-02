@@ -55,8 +55,13 @@ public class VehicleReservationServiceImpl implements VehicleReservationService{
             LocalDateTime reservationStart,
             LocalDateTime reservationEnd) {
 
-        LocalDateTime slotStart = slot.getSlotStart();
-        LocalDateTime slotEnd = slot.getSlotEnd();
+        slot.setAvailable(false);
+        slotRepository.save(slot);
+        boolean anyAvailable = offer.getSlots().stream().anyMatch(RentalOfferSlot::isAvailable);
+        if (!anyAvailable) {
+            offer.setAvailable(false);
+            offerRepository.save(offer);
+        }
     }
 
     private long calculateDurationInHours (LocalDateTime start, LocalDateTime end) {
