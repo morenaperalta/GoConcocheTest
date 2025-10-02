@@ -30,7 +30,7 @@ spec:
 
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: "kubernetes"
+              value: "docker"
             - name: SERVER_PORT
               value: "8080"
             - name: DB_URL
