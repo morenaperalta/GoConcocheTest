@@ -33,17 +33,17 @@ spec:
               value: "kubernetes"
             - name: SERVER_PORT
               value: "8080"
-            - name: MYSQL_URL
+            - name: DB_URL
               valueFrom:
                 configMapKeyRef:
                   name: config
                   key: db-url
-            - name: MYSQL_USER
+            - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: database-credentials
                   key: username
-            - name: MYSQL_PASSWORD
+            - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: database-credentials
