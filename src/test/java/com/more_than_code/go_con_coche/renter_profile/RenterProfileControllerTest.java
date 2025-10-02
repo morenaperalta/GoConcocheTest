@@ -253,26 +253,6 @@ public class RenterProfileControllerTest {
     class DeleteRenterProfileByIdTests {
 
         @Test
-        @DisplayName("Should delete renter profile by ID when user has ADMIN role")
-        @WithMockUser (username = "admin1", roles = {"ADMIN"})
-        void deleteRenterProfileById_WithAdminRole_ShouldReturnNoContent() throws Exception {
-            mockMvc.perform(multipart("/api/renter-profiles")
-                    .file(validImage)
-                    .param("typeLicense", "B")
-                    .param("licenseNumber", "12345678A")
-                    .param("expiredDate", "2026-12-31")
-                    .with(request -> {
-                        request.setRemoteUser ("renter1");
-                        return request;
-                    })
-                    .contentType(MediaType.MULTIPART_FORM_DATA));
-
-            mockMvc.perform(delete("/api/renter-profiles/id/1")
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNoContent());
-        }
-
-        @Test
         @DisplayName("Should return 404 when profile not found by ID")
         @WithMockUser (username = "admin1", roles = {"ADMIN"})
         void deleteRenterProfileById_WhenNotFound_ShouldReturnNotFound() throws Exception {

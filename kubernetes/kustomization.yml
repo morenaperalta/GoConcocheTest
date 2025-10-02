@@ -11,8 +11,8 @@ resources:
   - mailhog.yml
 
 images:
-  - name: fyrfigrabbaf6kyhpi/go-con-coche
-    newTag: latest
+  - name: peraltamorena/go-con-coche-app
+    newTag: sha-b6ba9af
 
 namePrefix: go-con-coche-
 
@@ -20,7 +20,6 @@ labels:
   - pairs:
       app: go-con-coche
       version: v1.1.1
-
 
 replicas:
   - name: app

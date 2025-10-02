@@ -12,7 +12,7 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-uroot", "-p${DB_ROOT_PASSWORD}" ]
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-p${DB_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 20
@@ -32,11 +32,13 @@ services:
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     environment:
+      DB_USERNAME: ${MYSQL_USER_DOCKER}
+      DB_PASSWORD: ${MYSQL_PASSWORD_DOCKER}
       SPRING_PROFILES_ACTIVE: docker
     depends_on:
       - go-con-coche-db
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ] # Health check command
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"] # Health check command
       interval: 30s # Check every 30 seconds
       timeout: 10s # Timeout after 10 seconds
       retries: 3 # Retry 3 times before marking as unhealthy
