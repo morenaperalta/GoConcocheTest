@@ -50,13 +50,15 @@ class RentalOfferSlotServiceTest {
         List<RentalOfferSlot> expectedSlots = List.of(slot1, slot2);
         when(slotRepository.findSlotsWithinPeriod(offerId, from, to)).thenReturn(expectedSlots);
         List<RentalOfferSlot> result = slotService.getSlotsWithinPeriod(offerId, from, to);
-        assertNotNull(result); assertEquals(2, result.size());
+        assertNotNull(result);
+        assertEquals(2, result.size());
         assertEquals(slot1, result.get(0));
         assertEquals(slot2, result.get(1));
     }
 
     @Test void getSlotsWithinPeriod_noSlotsFound_returnsEmptyList() {
-        Long offerId = 2L; when(slotRepository.findSlotsWithinPeriod(offerId, from, to)).thenReturn(Collections.emptyList());
+        Long offerId = 2L;
+        when(slotRepository.findSlotsWithinPeriod(offerId, from, to)).thenReturn(Collections.emptyList());
         List<RentalOfferSlot> result = slotService.getSlotsWithinPeriod(offerId, from, to);
         assertNotNull(result);
         assertTrue(result.isEmpty());
