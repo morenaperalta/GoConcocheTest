@@ -24,7 +24,7 @@ public class RentalOfferMapper {
         return RentalOfferResponse.builder()
                 .id(entity.getId())
                 .vehicle(vehicleMapper.toVehicleOfferResponse(entity.getVehicle()))
-                .location(locationMapper.toResponse(entity.getLocation()))
+                .location(entity.getLocation().getCity())
                 .startDateTime(entity.getStartDateTime())
                 .endDateTime(entity.getEndDateTime())
                 .priceHour(entity.getPriceHour())
