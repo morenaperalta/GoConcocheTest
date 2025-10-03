@@ -17,7 +17,7 @@ import java.util.List;
 public class RentalOfferStatusScheduler {
     private final VehicleRentalOfferRepository offerRepository;
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 * * *")
     @Transactional
     public void updateFlightStatuses() {
         LocalDateTime now = LocalDateTime.now();
