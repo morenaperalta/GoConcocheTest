@@ -46,10 +46,9 @@ class UserRoleControllerTest {
         user = RegisteredUser.builder()
                 .id(1L)
                 .username("sofia")
-                .roles(new HashSet<>()) // Set para los roles del usuario
+                .roles(new HashSet<>())
                 .build();
 
-        // List para registeredUsers en Role, que es lo que espera la entidad
         ownerRole = new Role(2L, "OWNER", new ArrayList<>());
         renterRole = new Role(3L, "RENTER", new ArrayList<>());
     }
