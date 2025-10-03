@@ -45,6 +45,33 @@ public class    EmailService {
         sendHtmlEmail(to, "Reservation on GoConCoche was confirmed", html);
     }
 
+    public void sendReminderEmail(String to, String username, String reservationCode,
+                                  LocalDateTime startDate, LocalDateTime endDate,
+                                  String vehicleBrand, int vehicleYear, String vehicleColor,
+                                  String seater, int childSeatsNumber, String vehicleModel,
+                                  int countTime, int priceHour, int totalPrice,
+                                  String location, String imageUrl) {
+        Context context = new Context();
+        context.setVariable("username", username);
+        context.setVariable("reservationCode", reservationCode);
+        context.setVariable("startDate", startDate);
+        context.setVariable("endDate", endDate);
+        context.setVariable("vehicleBrand", vehicleBrand);
+        context.setVariable("vehicleYear", vehicleYear);
+        context.setVariable("vehicleColor", vehicleColor);
+        context.setVariable("seater", seater);
+        context.setVariable("childSeatsNumber", childSeatsNumber);
+        context.setVariable("vehicleModel", vehicleModel);
+        context.setVariable("countTime", countTime);
+        context.setVariable("priceHour", priceHour);
+        context.setVariable("totalPrice", totalPrice);
+        context.setVariable("location", location);
+        context.setVariable("imageUrl", imageUrl);
+
+        String html = templateEngine.process("reminder-email", context);
+        sendHtmlEmail(to, "Reminder: Your GoConCoche reservation starts in 2 hours!", html);
+    }
+
     private void sendHtmlEmail(String to, String subject, String html) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
