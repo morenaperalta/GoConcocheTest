@@ -4,13 +4,9 @@ import com.more_than_code.go_con_coche.location.Location;
 import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
 import com.more_than_code.go_con_coche.vehicle.models.Vehicle;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "vehicle_rental_offers")
@@ -49,4 +45,10 @@ public class VehicleRentalOffer {
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RentalOfferSlot> slots = new ArrayList<>();
+
+    public void updateStatusIfNeeded() {
+        if (endDateTime.isBefore(LocalDateTime.now())) {
+            isAvailable = false;
+        }
+    }
 }

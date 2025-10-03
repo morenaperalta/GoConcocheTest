@@ -1,7 +1,6 @@
 package com.more_than_code.go_con_coche.vehicle_rental_offer.dtos.search;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 
