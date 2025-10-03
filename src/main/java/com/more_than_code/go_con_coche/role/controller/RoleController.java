@@ -1,4 +1,4 @@
-package com.more_than_code.go_con_coche.role;
+package com.more_than_code.go_con_coche.role.controller;
 
 import com.more_than_code.go_con_coche.role.dtos.RoleResponse;
 import com.more_than_code.go_con_coche.role.services.RoleService;
