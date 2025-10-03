@@ -45,4 +45,10 @@ public class VehicleRentalOffer {
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RentalOfferSlot> slots = new ArrayList<>();
+
+    public void updateStatusIfNeeded() {
+        if (endDateTime.isBefore(LocalDateTime.now())) {
+            isAvailable = false;
+        }
+    }
 }

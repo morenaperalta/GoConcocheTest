@@ -22,4 +22,6 @@ public interface VehicleRentalOfferRepository extends JpaRepository<VehicleRenta
     List<VehicleRentalOffer> findByLocationIdAndIsAvailableTrue(Long locationId);
 
     List<VehicleRentalOffer> findByOwnerId(Long id);
+
+    List<VehicleRentalOffer> findByEndDateTimeBeforeAndIsAvailableTrue(LocalDateTime now);
 }

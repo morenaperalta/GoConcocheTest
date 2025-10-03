@@ -39,8 +39,6 @@ mvn spring-boot:run
 - POST http://localhost:8080/api/auth/register registration of users
 - POST http://localhost:8080/api/auth/login for login
 - POST http://localhost:8080/api/auth/refresh for refresh token
-- POST http://localhost:8080/api/logout for logout
-
 
 ### Vehicle
 - GET http://localhost:8080/api/vehicles to get all vehicles (only for ADMIN)
@@ -74,7 +72,7 @@ mvn spring-boot:run
 
 ## ✏️ ER Physical Diagram
 
-[![temp-Imagemxv-S8-B.avif](https://i.postimg.cc/JhvdWdQt/temp-Imagemxv-S8-B.avif)](https://files.fm/u/266jy9nnvv)
+[![Screenshot-2025-10-02-at-19-10-48.png](https://i.postimg.cc/ZK1Dh7nw/Screenshot-2025-10-02-at-19-10-48.png)](https://postimg.cc/4mQ161zc)
 
 ## 🧪 Testing
 This project includes unit tests and integration tests. 
