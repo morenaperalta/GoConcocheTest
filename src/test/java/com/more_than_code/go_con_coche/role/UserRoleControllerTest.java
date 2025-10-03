@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Unit tests for UserRoleController")
-class UserRoleControllerUnitTest {
+class UserRoleControllerTest {
 
     @Mock
     private RegisteredUserRepository userRepository;
