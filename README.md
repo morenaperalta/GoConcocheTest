@@ -86,7 +86,7 @@ The project uses **GitHub Actions** for continuous integration.
 This project implements a robust CI/CD pipeline using GitHub Actions to automate testing, Docker image building, and release management.
 
 ### 🔧 Build Pipeline (build.yml)
-[![Build Pipeline](https://github.com/More-ThanCode/GoConcoche/actions/workflows/build.yml/badge.svg)](https://github.com/More-ThanCode/GoConcoche/actions/workflows/build.yml)
+[![Build Pipeline](https://github.com/morenaperalta/GoConcocheTest/actions/workflows/build.yml/badge.svg)](https://github.com/morenaperalta/GoConcocheTest/actions/workflows/build.yml)
 
 **Trigger:** Automatically executes on every push to main branch
 
@@ -100,14 +100,14 @@ This project implements a robust CI/CD pipeline using GitHub Actions to automate
 - Generating build artifacts and reports
 
 ### 🎯 Release Pipeline (release.yml)
-[![Release Pipeline](https://github.com/More-ThanCode/GoConcoche/actions/workflows/release.yml/badge.svg)](https://github.com/More-ThanCode/GoConcoche/actions/workflows/release.yml)
+[![Release Pipeline](https://github.com/morenaperalta/GoConcocheTest/actions/workflows/release.yml/badge.svg)](https://github.com/morenaperalta/GoConcocheTest/actions/workflows/release.yml)
 
 **Trigger:** Automatically activates when version tags are pushed (format: v*, e.g., v1.0.0)
 
 **Purpose:** Production-ready deployments
 
 ### 🔍 Test Pipeline (test.yml)
-[![Test Pipeline](https://github.com/More-ThanCode/GoConcoche/actions/workflows/test.yml/badge.svg)](https://github.com/More-ThanCode/GoConcoche/actions/workflows/test.yml)
+[![Test Pipeline](https://github.com/morenaperalta/GoConcocheTest/actions/workflows/test.yml/badge.svg)](https://github.com/morenaperalta/GoConcocheTest/actions/workflows/test.yml)
 
 **Trigger:** Automatically runs on every Pull Request targeting main
 
