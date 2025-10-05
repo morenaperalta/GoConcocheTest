@@ -99,8 +99,10 @@ This project implements a robust CI/CD pipeline using GitHub Actions to automate
 - Tagging images with commit SHAs
 - Generating build artifacts and reports
 
-### 🎯 Release Pipeline (release.yml)
-[![Release Pipeline](https://github.com/morenaperalta/GoConcocheTest/actions/workflows/release.yml/badge.svg)](https://github.com/morenaperalta/GoConcocheTest/actions/workflows/release.yml)
+### 🎯 Release Pipeline
+[![Release Pipeline](https://github.com/morenaperalta/GoConcocheTest/actions/workflows/release.yml/badge.svg?event=push)](https://github.com/morenaperalta/GoConcocheTest/actions/workflows/release.yml)
+
+### 🔍 Test Pipeline
 
 **Trigger:** Automatically activates when version tags are pushed (format: v*, e.g., v1.0.0)
 
